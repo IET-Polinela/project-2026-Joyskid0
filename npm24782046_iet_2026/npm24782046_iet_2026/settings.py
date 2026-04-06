@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'npm24782046_iet_2026.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '177005',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

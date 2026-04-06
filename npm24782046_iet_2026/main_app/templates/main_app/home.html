@@ -19,10 +19,42 @@
             <nav>
                 <a href="/about"><button>Tentang</button></a>
                 <a href="/contacts"><button>Hubungi</button></a>
+                <a href="{% url 'add_report' %}"><button>Tambah Laporan</button></a>
             </nav>
         </center>
 
-     
+        <hr>
+
+        <center>
+            <h2>Daftar Laporan Masalah Kota</h2>
+        </center>
+
+        {% if reports %}
+            {% for report in reports %}
+                <div style="border:1px solid black; margin:10px; padding:10px;">
+                    <h3>{{ report.title }}</h3>
+                    <p><b>Kategori:</b> {{ report.category }}</p>
+                    <p><b>Deskripsi:</b> {{ report.description }}</p>
+                    <p><b>Lokasi:</b> {{ report.location }}</p>
+                    <p><b>Status:</b> {{ report.status }}</p>
+                    <p><b>Dibuat:</b> {{ report.created_at }}</p>
+
+                    <a href="{% url 'update_report' report.id %}">
+                        <button>Edit</button>
+                    </a>
+
+                    <a href="{% url 'delete_report' report.id %}">
+                        <button>Hapus</button>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <center>
+                <p>Belum ada laporan.</p>
+            </center>
+        {% endif %}
+
     </main>
+
 </body>
 </html>
