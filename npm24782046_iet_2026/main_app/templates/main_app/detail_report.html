@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Report</title>
+</head>
+<body>
+
+    <center>
+        <h1>Detail Laporan</h1>
+    </center>
+
+    <div style="border:1px solid black; margin:20px; padding:20px;">
+        <h2>{{ report.title }}</h2>
+        <p><b>Kategori:</b> {{ report.category }}</p>
+        <p><b>Deskripsi:</b> {{ report.description }}</p>
+        <p><b>Lokasi:</b> {{ report.location }}</p>
+        <p><b>Status:</b> {{ report.status }}</p>
+        <p><b>Dibuat:</b> {{ report.created_at }}</p>
+    </div>
+
+    <center>
+        <a href="{% url 'home' %}">
+            <button>Kembali ke Home</button>
+        </a>
+
+        <a href="{% url 'update_report' report.pk %}">
+            <button>Edit</button>
+        </a>
+
+        <a href="{% url 'delete_report' report.pk %}">
+            <button>Hapus</button>
+        </a>
+    </center>
+
+</body>
+</html>

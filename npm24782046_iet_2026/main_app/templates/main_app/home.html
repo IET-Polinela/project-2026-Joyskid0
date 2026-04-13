@@ -2,13 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Home - Laguboti</title>
+    <title>Home - Balige</title>
 </head>
 <body>
 
     <header>
         <center>
-            <h1>Selamat Datang di Kota Laguboti</h1>
+            <h1>Selamat Datang di Kota Balige</h1>
             <p><i>"Kota Indah di Tepian Danau Toba"</i></p>
             <hr width="50%">
         </center>
@@ -39,13 +39,40 @@
                     <p><b>Status:</b> {{ report.status }}</p>
                     <p><b>Dibuat:</b> {{ report.created_at }}</p>
 
-                    <a href="{% url 'update_report' report.id %}">
+                    <a href="{% url 'detail_report' report.pk %}">
+                        <button>Detail</button>
+                    </a>
+
+                    <a href="{% url 'update_report' report.pk %}">
                         <button>Edit</button>
                     </a>
 
-                    <a href="{% url 'delete_report' report.id %}">
+                    <a href="{% url 'delete_report' report.pk %}">
                         <button>Hapus</button>
                     </a>
+
+                    <form method="POST" action="{% url 'update_status' report.pk %}" style="margin-top:10px;">
+                        {% csrf_token %}
+
+                        {% if report.status == "REPORTED" %}
+                            <button type="submit" name="status" value="VERIFIED">
+                                Ubah ke VERIFIED
+                            </button>
+
+                        {% elif report.status == "VERIFIED" %}
+                            <button type="submit" name="status" value="IN_PROGRESS">
+                                Ubah ke IN_PROGRESS
+                            </button>
+
+                        {% elif report.status == "IN_PROGRESS" %}
+                            <button type="submit" name="status" value="RESOLVED">
+                                Ubah ke RESOLVED
+                            </button>
+
+                        {% elif report.status == "RESOLVED" %}
+                            <p><b>Laporan sudah selesai.</b></p>
+                        {% endif %}
+                    </form>
                 </div>
             {% endfor %}
         {% else %}
