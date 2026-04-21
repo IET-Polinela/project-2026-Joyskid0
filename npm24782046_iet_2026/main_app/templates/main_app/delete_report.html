@@ -1,20 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hapus Laporan</title>
-</head>
-<body>
-    <h1>Hapus Laporan</h1>
+{% extends 'base.html' %}
 
-    <p>Apakah kamu yakin ingin menghapus laporan ini?</p>
-    <p><strong>{{ report.title }}</strong></p>
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-danger text-white text-center py-3">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Konfirmasi Penghapusan</h4>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <p class="fs-5">Apakah kamu benar-benar yakin ingin menghapus laporan ini?</p>
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h5 class="fw-bold text-dark mb-1">{{ report.title }}</h5>
+                        <p class="text-muted mb-0 small">Kategori: {{ report.category }}</p>
+                    </div>
 
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Ya, Hapus</button>
-    </form>
+                    <button type="button" class="btn btn-danger px-4 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#confirmActionModal">
+                        Ya, Hapus Laporan
+                    </button>
+                    
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4 py-2 ms-2">Batal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <br>
-    <a href="{% url 'home' %}">Batal</a>
-</body>
-</html>
+<div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <div class="modal-body">
+                <i class="bi bi-x-circle text-danger display-1"></i>
+                <h3 class="mt-3 fw-bold">Are you sure?</h3>
+                <p class="text-secondary">Do you really want to delete this record? This process cannot be undone.</p>
+                
+                <div class="mt-4 d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger px-4">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

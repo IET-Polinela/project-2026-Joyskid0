@@ -1,18 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tambah Laporan</title>
-</head>
-<body>
-    <h1>Tambah Laporan</h1>
+{% extends 'base.html' %}
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Simpan</button>
-    </form>
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Form Laporan</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST" id="reportForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'home' %}" class="btn btn-secondary">Kembali</a>
+                
+                <button type="submit" class="btn btn-success px-4" id="submitBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="btnSpinner" role="status"></span>
+                    <span id="btnText">Simpan Laporan</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-    <br>
-    <a href="{% url 'home' %}">Kembali ke Daftar Laporan</a>
-</body>
-</html>
+<script>
+    const reportForm = document.getElementById('reportForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
+
+    reportForm.addEventListener('submit', function() {
+        // 1. Matikan tombol agar tidak diklik dua kali (Disable) 
+        submitBtn.disabled = true;
+        
+        // 2. Munculkan simbol loading 
+        btnSpinner.classList.remove('d-none');
+        
+        // 3. Ubah teks menjadi "Loading..." 
+        btnText.innerText = "Loading...";
+    });
+</script>
+{% endblock %}

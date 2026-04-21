@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.shortcuts import get_object_or_404, redirect
 from .models import Report
 from .forms import ReportForm
+from django.contrib import messages
 
 class ReportListView(ListView):
     model = Report
@@ -20,16 +21,28 @@ class ReportCreateView(CreateView):
     template_name = 'main_app/add_report.html'
     success_url = reverse_lazy('home')
 
+    def form_valid(self, form):
+        messages.success(self.request, "Laporan baru berhasil ditambahkan!")
+        return super().form_valid(form)
+
 class ReportUpdateView(UpdateView):
     model = Report
     form_class = ReportForm
     template_name = 'main_app/update_report.html'
     success_url = reverse_lazy('home')
 
+    def form_valid(self, form):
+        messages.success(self.request, "Perubahan laporan berhasil disimpan!")
+        return super().form_valid(form)
+
 class ReportDeleteView(DeleteView):
     model = Report
     template_name = 'main_app/delete_report.html'
     success_url = reverse_lazy('home')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Laporan telah berhasil dihapus.")
+        return super().delete(request, *args, **kwargs)
 
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
@@ -37,4 +50,5 @@ class ReportUpdateStatusView(View):
         new_status = request.POST.get('status')
         report.status = new_status
         report.save()
+        messages.success(request, f"Status laporan diperbarui menjadi {new_status}!")
         return redirect('home')
