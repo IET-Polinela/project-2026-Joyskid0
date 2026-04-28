@@ -1,44 +1,39 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="card shadow-sm mx-auto" style="max-width: 600px;">
-    <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Form Laporan</h4>
-    </div>
-    <div class="card-body">
-        <form method="POST" id="reportForm">
-            {% csrf_token %}
-            <div class="mb-3">
-                {{ form.as_p }}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white py-3"><h5 class="mb-0 fw-bold">Form Laporan</h5></div>
+            <div class="card-body p-4 p-md-5 bg-white">
+                <form method="POST" class="form-loading">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Judul</label>
+                        <input type="text" name="title" class="form-control" required value="{{ object.title|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kategori</label>
+                        <select name="category" class="form-select" required>
+                            <option value="Infrastruktur" {% if object.category == 'Infrastruktur' %}selected{% endif %}>Infrastruktur</option>
+                            <option value="Kebersihan" {% if object.category == 'Kebersihan' %}selected{% endif %}>Kebersihan</option>
+                            <option value="Utilitas" {% if object.category == 'Utilitas' %}selected{% endif %}>Utilitas</option>
+                            <option value="Keamanan" {% if object.category == 'Keamanan' %}selected{% endif %}>Keamanan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Lokasi</label>
+                        <input type="text" name="location" class="form-control" required value="{{ object.location|default:'' }}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Deskripsi</label>
+                        <textarea name="description" class="form-control" rows="5" required>{{ object.description|default:'' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm btn-load">
+                        Kirim Laporan
+                    </button>
+                </form>
             </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-                <a href="{% url 'home' %}" class="btn btn-secondary">Kembali</a>
-                
-                <button type="submit" class="btn btn-success px-4" id="submitBtn">
-                    <span class="spinner-border spinner-border-sm d-none" id="btnSpinner" role="status"></span>
-                    <span id="btnText">Simpan Laporan</span>
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<script>
-    const reportForm = document.getElementById('reportForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnSpinner = document.getElementById('btnSpinner');
-    const btnText = document.getElementById('btnText');
-
-    reportForm.addEventListener('submit', function() {
-        // 1. Matikan tombol agar tidak diklik dua kali (Disable) 
-        submitBtn.disabled = true;
-        
-        // 2. Munculkan simbol loading 
-        btnSpinner.classList.remove('d-none');
-        
-        // 3. Ubah teks menjadi "Loading..." 
-        btnText.innerText = "Loading...";
-    });
-</script>
 {% endblock %}

@@ -2,102 +2,93 @@
 
 {% block content %}
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Reports</li>
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active fw-bold text-primary" aria-current="page"> Home </li>
   </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Daftar Laporan Masalah Kota</h2>
-    <a href="{% url 'add_report' %}" class="btn btn-primary shadow-sm">
-        <i class="bi bi-plus-circle me-1"></i> Tambah Laporan
-    </a>
+<div class="p-5 mb-5 rounded-5 shadow-sm border-0 position-relative overflow-hidden" 
+     style="background: linear-gradient(135deg, #0d6efd 0%, #001f3f 100%);">
+    
+    <div class="position-absolute top-0 end-0 translate-middle-y opacity-10" style="margin-right: -20px;">
+        <i class="bi bi-house-heart-fill" style="font-size: 220px; color: white;"></i>
+    </div>
+
+    <div class="container py-4 position-relative text-white">
+        <h1 class="display-4 fw-bold mb-3 text-shadow">Horas, Halak Hita! 👋</h1>
+        <h2 class="h3 fw-light mb-4 opacity-90">Pature Balige, Marhite Laporan Digital.</h2>
+        
+        <p class="col-md-7 fs-5 fw-light opacity-75 mb-5">
+            Selamat datang di platform aspirasi masyarakat Balige. Mari bergotong-royong membangun Kota kita dengan melaporkan setiap kendala infrastruktur secara transparan dan cepat.
+        </p>
+        
+        <div class="d-flex flex-column flex-sm-row gap-3">
+            <a href="{% url 'add_report' %}" class="btn btn-light btn-lg px-5 rounded-pill fw-bold text-primary btn-load-link shadow-lg">
+                <i class="bi bi-pencil-fill me-2"></i> Buat Laporan Baru
+            </a>
+            <a href="{% url 'report_list' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill fw-bold border-2">
+                <i class="bi bi-search me-2"></i> Eksplorasi Laporan
+            </a>
+        </div>
+    </div>
 </div>
 
-{% if reports %}
-    <div class="table-responsive shadow-sm rounded">
-        <table class="table table-hover align-middle bg-white mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th style="width: 25%;">Judul</th>
-                    <th style="width: 25%;">Lokasi</th>
-                    <th style="width: 15%; text-center">Status</th>
-                    <th style="width: 35%; text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for report in reports %}
-                <tr>
-                    <td class="fw-semibold">{{ report.title }}</td>
-                    <td>{{ report.location }}</td>
-                    <td class="text-center">
-                        {% if report.status == "REPORTED" %}
-                            <span class="badge rounded-pill bg-secondary px-3">Reported</span>
-                        {% elif report.status == "VERIFIED" %}
-                            <span class="badge rounded-pill bg-primary px-3">Verified</span>
-                        {% elif report.status == "IN_PROGRESS" %}
-                            <span class="badge rounded-pill bg-warning text-dark px-3">In Progress</span>
-                        {% elif report.status == "RESOLVED" %}
-                            <span class="badge rounded-pill bg-success px-3">Resolved</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center gap-1">
-                            {% if report.status != "RESOLVED" %}
-                                <button type="button" class="btn btn-sm 
-                                    {% if report.status == 'REPORTED' %}btn-info text-white{% elif report.status == 'VERIFIED' %}btn-warning{% elif report.status == 'IN_PROGRESS' %}btn-success{% endif %}"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#confirmStatusModal{{ report.pk }}">
-                                    {% if report.status == "REPORTED" %}Verifikasi{% elif report.status == "VERIFIED" %}Proses{% elif report.status == "IN_PROGRESS" %}Selesai{% endif %}
-                                </button>
-                            {% endif %}
-
-                            <a href="{% url 'update_report' report.pk %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil-square"></i> Edit
-                            </a>
-
-                            <a href="{% url 'delete_report' report.pk %}" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </div>
-
-                        <div class="modal fade" id="confirmStatusModal{{ report.pk }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content text-center p-4">
-                                    <div class="modal-body">
-                                        <i class="bi bi-question-circle text-warning display-1"></i>
-                                        <h3 class="mt-3 fw-bold">Ubah Status?</h3>
-                                        <p class="text-secondary">Apakah Anda yakin ingin mengubah status laporan <strong>{{ report.title }}</strong>?</p>
-                                        <form method="POST" action="{% url 'update_status' report.pk %}" class="mt-4 d-flex justify-content-center gap-2">
-                                            {% csrf_token %}
-                                            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
-                                            {% if report.status == "REPORTED" %}
-                                                <button name="status" value="VERIFIED" class="btn btn-info text-white px-4">Ya, Verifikasi</button>
-                                            {% elif report.status == "VERIFIED" %}
-                                                <button name="status" value="IN_PROGRESS" class="btn btn-warning px-4">Ya, Proses</button>
-                                            {% elif report.status == "IN_PROGRESS" %}
-                                                <button name="status" value="RESOLVED" class="btn btn-success px-4">Ya, Selesai</button>
-                                            {% endif %}
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="row g-4 mb-5 text-center">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <div class="d-inline-flex p-3 bg-primary-subtle rounded-circle mb-2">
+                        <i class="bi bi-megaphone fs-2"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Aspirasi Warga</h5>
+                <p class="text-muted small mb-0">Laporkan jalan rusak, lampu mati, atau kendala fasilitas umum lainnya di seputaran Balige dengan praktis.</p>
+            </div>
+        </div>
     </div>
-{% else %}
-    <div class="text-center py-5 border bg-white rounded shadow-sm">
-        <i class="bi bi-clipboard-x display-1 text-muted"></i>
-        <h4 class="mt-3 text-secondary">Belum ada laporan.</h4>
-        <p class="text-muted small">Jadilah yang pertama untuk melaporkan masalah kota Anda.</p>
-        <a href="{% url 'add_report' %}" class="btn btn-primary mt-2">
-            <i class="bi bi-plus-circle me-1"></i> Tambah Laporan
-        </a>
+
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white border-top border-primary border-4">
+            <div class="card-body">
+                <div class="mb-3 text-success">
+                    <div class="d-inline-flex p-3 bg-success-subtle rounded-circle mb-2">
+                        <i class="bi bi-patch-check fs-2"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Verifikasi Cepat</h5>
+                <p class="text-muted small mb-0">Setiap data akan diverifikasi oleh Admin berpengalaman untuk memastikan laporan segera ditindaklanjuti.</p>
+            </div>
+        </div>
     </div>
-{% endif %}
+
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
+            <div class="card-body">
+                <div class="mb-3 text-info">
+                    <div class="d-inline-flex p-3 bg-info-subtle rounded-circle mb-2">
+                        <i class="bi bi-bar-chart-line fs-2"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Transparansi Balige</h5>
+                <p class="text-muted small mb-0">Pantau status laporan secara real-time. Dari 'Reported' hingga tuntas di 'Resolved' demi Balige na denggan.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-lift {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    .hover-lift:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+    .bg-primary-subtle { background-color: #e7f1ff; }
+    .bg-success-subtle { background-color: #e6fffa; }
+    .bg-info-subtle { background-color: #e7faff; }
+    .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+</style>
+
 {% endblock %}

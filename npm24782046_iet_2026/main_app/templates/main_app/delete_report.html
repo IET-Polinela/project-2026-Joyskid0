@@ -1,25 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'report_list' %}" class="text-decoration-none">Reports</a></li>
+    <li class="breadcrumb-item active">Konfirmasi Hapus</li>
+  </ol>
+</nav>
+
+<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow border-0">
-                <div class="card-header bg-danger text-white text-center py-3">
-                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Konfirmasi Penghapusan</h4>
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-danger text-white text-center py-3 border-0">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Konfirmasi Penghapusan</h4>
                 </div>
-                <div class="card-body p-4 text-center">
+                <div class="card-body p-4 text-center bg-white">
                     <p class="fs-5">Apakah kamu benar-benar yakin ingin menghapus laporan ini?</p>
-                    <div class="bg-light p-3 rounded mb-4">
-                        <h5 class="fw-bold text-dark mb-1">{{ report.title }}</h5>
-                        <p class="text-muted mb-0 small">Kategori: {{ report.category }}</p>
+                    <div class="bg-light p-4 rounded-4 mb-4 border">
+                        <h5 class="fw-bold text-dark mb-1">{{ object.title|default:report.title }}</h5>
+                        <p class="text-muted mb-0 small">Kategori: {{ object.category|default:report.category }}</p>
                     </div>
 
-                    <button type="button" class="btn btn-danger px-4 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#confirmActionModal">
+                    <button type="button" class="btn btn-danger px-4 py-2 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#confirmActionModal">
                         Ya, Hapus Laporan
                     </button>
                     
-                    <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4 py-2 ms-2">Batal</a>
+                    <a href="{% url 'report_list' %}" class="btn btn-outline-secondary px-4 py-2 ms-2 rounded-pill">Batal</a>
                 </div>
             </div>
         </div>
@@ -28,18 +36,20 @@
 
 <div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-4">
-            <div class="modal-body">
-                <i class="bi bi-x-circle text-danger display-1"></i>
-                <h3 class="mt-3 fw-bold">Are you sure?</h3>
-                <p class="text-secondary">Do you really want to delete this record? This process cannot be undone.</p>
+        <div class="modal-content border-0 rounded-4 shadow-lg p-4">
+            <div class="modal-body text-center">
+                <i class="bi bi-trash3 text-danger display-1 mb-3"></i>
+                <h3 class="fw-bold">Yakin Banget?</h3>
+                <p class="text-secondary">Data ini bakal hilang selamanya dan nggak bisa dikembalikan lagi, lho!</p>
                 
                 <div class="mt-4 d-flex justify-content-center gap-2">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-light px-4 rounded-pill fw-bold" data-bs-dismiss="modal">Nggak Jadi</button>
                     
-                    <form method="POST">
+                    <form method="POST" class="form-loading m-0">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger px-4">Delete</button>
+                        <button type="submit" class="btn btn-danger px-4 rounded-pill fw-bold btn-load">
+                            Hapus Sekarang!
+                        </button>
                     </form>
                 </div>
             </div>
