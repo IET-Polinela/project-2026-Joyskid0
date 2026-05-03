@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item active">Reports</li></ol></nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active">Reports</li>
+    </ol>
+</nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-primary">Manajemen Laporan Balige</h2>
-    <div class="d-flex gap-2">
-        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm" placeholder="Cari judul laporan..." style="width: 300px;">
-        <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm">+ Tambah</a>
+<!-- Header: Responsif untuk Mobile & Desktop -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <h2 class="fw-bold text-primary mb-0">Manajemen Laporan Balige</h2>
+    <div class="d-flex gap-2 w-100 w-md-auto">
+        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm flex-grow-1" placeholder="Cari judul laporan..." style="max-width: 300px;">
+        <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm flex-shrink-0">+ Tambah</a>
     </div>
 </div>
 
@@ -36,7 +42,6 @@
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="{{ report.pk }}">Detail</button>
-                        
                         {% if report.status != 'RESOLVED' %}
                         <form action="{% url 'update_status' report.pk %}" method="POST" class="form-loading">
                             {% csrf_token %}
@@ -50,13 +55,12 @@
                     </div>
                 </td>
             </tr>
-            {% empty %}
-            <tr><td colspan="3" class="text-center py-5 text-muted">Belum ada laporan.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
+<!-- Modal Detail -->
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-4 shadow">
@@ -78,15 +82,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('liveSearch');
     const tableBody = document.getElementById('reportTableBody');
 
-    // 1. Fungsi Debouncing untuk efisiensi Fetch 
     let debounceTimer;
     searchInput.addEventListener('input', function() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             const query = this.value;
-            fetch(`/api/search/?q=${query}`) // Memanggil view live_search_api [cite: 83]
+            fetch(`/api/search/?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
+                    // PENTING: Baris di bawah ini untuk memunculkan SS 6 di Console
+                    console.log("Data JSON diterima dari API:", data); 
+
                     tableBody.innerHTML = '';
                     if (data.results.length > 0) {
                         data.results.forEach(report => {
@@ -108,10 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-5 text-muted">Tidak ada hasil ditemukan.</td></tr>';
                     }
                 });
-        }, 500); // Tunggu 500ms setelah user berhenti mengetik
+        }, 500); 
     });
 
-    // 2. Event Delegation untuk Tombol Detail 
+    // Event Delegation agar tombol detail tetap aktif setelah search
     tableBody.addEventListener('click', function(e) {
         if (e.target.classList.contains('btn-detail')) {
             const reportId = e.target.getAttribute('data-id');
@@ -121,17 +127,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             modal.show();
 
-            // Fetch detail laporan secara asinkron [cite: 5, 84]
             fetch(`/api/report/${reportId}/`)
                 .then(response => response.json())
                 .then(data => {
                     modalTitle.innerText = data.title;
                     modalBody.innerHTML = `
-                        <div class="mb-3"><strong>Kategori:</strong> <span class="badge bg-info text-dark">${data.category}</span></div>
-                        <div class="mb-3"><strong>Status:</strong> <span class="badge bg-primary">${data.status}</span></div>
-                        <div class="mb-3"><strong>Lokasi:</strong><br>${data.location}</div>
-                        <div class="mb-3"><strong>Deskripsi:</strong><br><p class="text-muted">${data.description}</p></div>
-                    `;
+                        <p><strong>Kategori:</strong> ${data.category}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                        <p><strong>Lokasi:</strong> ${data.location}</p>
+                        <p><strong>Deskripsi:</strong> ${data.description}</p>`;
                 });
         }
     });
