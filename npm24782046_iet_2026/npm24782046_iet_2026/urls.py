@@ -20,8 +20,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main_app.urls')),
-    
-    # Tambahkan '/' di akhir path sesuai standar Django
     path('about/', include('about.urls')), 
     path('contacts/', include('contacts.urls')),
+    path('dashboard/', include('dashboard_24782046.urls')),
 ]

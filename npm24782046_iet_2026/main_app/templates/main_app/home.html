@@ -24,10 +24,13 @@
         
         <div class="d-flex flex-column flex-sm-row gap-3">
             <a href="{% url 'add_report' %}" class="btn btn-light btn-lg px-5 rounded-pill fw-bold text-primary btn-load-link shadow-lg">
-                <i class="bi bi-pencil-fill me-2"></i> Buat Laporan Baru
+                <i class="bi bi-pencil-fill me-2"></i> Buat Laporan
+            </a>
+            <a href="{% url 'dashboard:index' %}" class="btn btn-warning btn-lg px-5 rounded-pill fw-bold shadow-lg">
+                <i class="bi bi-bar-chart-fill me-2"></i> Statistik Kota
             </a>
             <a href="{% url 'report_list' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill fw-bold border-2">
-                <i class="bi bi-search me-2"></i> Eksplorasi Laporan
+                <i class="bi bi-search me-2"></i> Eksplorasi
             </a>
         </div>
     </div>
@@ -63,17 +66,20 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
-            <div class="card-body">
-                <div class="mb-3 text-info">
-                    <div class="d-inline-flex p-3 bg-info-subtle rounded-circle mb-2">
-                        <i class="bi bi-bar-chart-line fs-2"></i>
+        <a href="{% url 'dashboard:index' %}" class="text-decoration-none text-dark">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
+                <div class="card-body">
+                    <div class="mb-3 text-info">
+                        <div class="d-inline-flex p-3 bg-info-subtle rounded-circle mb-2">
+                            <i class="bi bi-bar-chart-line fs-2"></i>
+                        </div>
                     </div>
+                    <h5 class="fw-bold">Transparansi Balige</h5>
+                    <p class="text-muted small mb-3">Pantau status laporan secara real-time melalui Dashboard statistik yang dinamis.</p>
+                    <span class="text-primary fw-bold small">Buka Dashboard <i class="bi bi-arrow-right"></i></span>
                 </div>
-                <h5 class="fw-bold">Transparansi Balige</h5>
-                <p class="text-muted small mb-0">Pantau status laporan secara real-time. Dari 'Reported' hingga tuntas di 'Resolved' demi Balige na denggan.</p>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
@@ -90,5 +96,4 @@
     .bg-info-subtle { background-color: #e7faff; }
     .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 </style>
-
 {% endblock %}

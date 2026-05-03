@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item active">Reports</li></ol></nav>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold text-primary">Manajemen Laporan Balige</h2>
-    <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm">+ Tambah</a>
+    <div class="d-flex gap-2">
+        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm" placeholder="Cari judul laporan..." style="width: 300px;">
+        <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm">+ Tambah</a>
+    </div>
 </div>
 
 <div class="table-responsive shadow-sm rounded-4 border bg-white">
@@ -16,9 +20,9 @@
                 <th>Aksi Pengelolaan</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="reportTableBody">
             {% for report in reports %}
-            <tr>
+            <tr id="report-row-{{ report.pk }}">
                 <td class="ps-4">
                     <div class="fw-bold fs-5 text-dark">{{ report.title }}</div>
                     <span class="badge bg-light text-primary border border-primary-subtle px-2">{{ report.category }}</span>
@@ -31,18 +35,18 @@
                 </td>
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="{{ report.pk }}">Detail</button>
+                        
                         {% if report.status != 'RESOLVED' %}
                         <form action="{% url 'update_status' report.pk %}" method="POST" class="form-loading">
                             {% csrf_token %}
                             <input type="hidden" name="status" value="{% if report.status == 'REPORTED' %}VERIFIED{% elif report.status == 'VERIFIED' %}IN_PROGRESS{% else %}RESOLVED{% endif %}">
-                            <button type="submit" class="btn btn-sm {% if report.status == 'REPORTED' %}btn-primary{% else %}btn-warning text-dark{% endif %} px-3 fw-bold btn-load">
+                            <button type="submit" class="btn btn-sm {% if report.status == 'REPORTED' %}btn-primary{% else %}btn-warning text-dark{% endif %} px-3 fw-bold">
                                 {% if report.status == 'REPORTED' %}Verifikasi{% elif report.status == 'VERIFIED' %}Proses{% else %}Selesai{% endif %}
                             </button>
                         </form>
                         {% endif %}
-
-                        <a href="{% url 'update_report' report.pk %}" class="btn btn-sm btn-info text-dark px-3 fw-bold btn-load-link">Edit</a>
-                        <a href="{% url 'delete_report' report.pk %}" class="btn btn-sm btn-danger px-3 fw-bold btn-load-link">Hapus</a>
+                        <a href="{% url 'delete_report' report.pk %}" class="btn btn-sm btn-danger px-3 fw-bold">Hapus</a>
                     </div>
                 </td>
             </tr>
@@ -52,4 +56,85 @@
         </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="modalTitle">Detail Laporan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('liveSearch');
+    const tableBody = document.getElementById('reportTableBody');
+
+    // 1. Fungsi Debouncing untuk efisiensi Fetch 
+    let debounceTimer;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            const query = this.value;
+            fetch(`/api/search/?q=${query}`) // Memanggil view live_search_api [cite: 83]
+                .then(response => response.json())
+                .then(data => {
+                    tableBody.innerHTML = '';
+                    if (data.results.length > 0) {
+                        data.results.forEach(report => {
+                            tableBody.innerHTML += `
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold fs-5 text-dark">${report.title}</div>
+                                        <span class="badge bg-light text-primary border border-primary-subtle px-2">${report.category}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary px-3 py-2">${report.status}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="${report.id}">Detail</button>
+                                    </td>
+                                </tr>`;
+                        });
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-5 text-muted">Tidak ada hasil ditemukan.</td></tr>';
+                    }
+                });
+        }, 500); // Tunggu 500ms setelah user berhenti mengetik
+    });
+
+    // 2. Event Delegation untuk Tombol Detail 
+    tableBody.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-detail')) {
+            const reportId = e.target.getAttribute('data-id');
+            const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalTitle');
+
+            modal.show();
+
+            // Fetch detail laporan secara asinkron [cite: 5, 84]
+            fetch(`/api/report/${reportId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    modalTitle.innerText = data.title;
+                    modalBody.innerHTML = `
+                        <div class="mb-3"><strong>Kategori:</strong> <span class="badge bg-info text-dark">${data.category}</span></div>
+                        <div class="mb-3"><strong>Status:</strong> <span class="badge bg-primary">${data.status}</span></div>
+                        <div class="mb-3"><strong>Lokasi:</strong><br>${data.location}</div>
+                        <div class="mb-3"><strong>Deskripsi:</strong><br><p class="text-muted">${data.description}</p></div>
+                    `;
+                });
+        }
+    });
+});
+</script>
 {% endblock %}

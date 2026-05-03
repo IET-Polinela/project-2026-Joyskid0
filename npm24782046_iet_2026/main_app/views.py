@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Report
 from .forms import ReportForm
-
+from django.http import JsonResponse
 # Proteksi Admin
 class AdminOnlyMixin(UserPassesTestMixin):
     def test_func(self):
@@ -59,3 +59,25 @@ class ReportUpdateStatusView(LoginRequiredMixin, AdminOnlyMixin, View):
             report.save()
             messages.success(request, f"Status '{report.title}' sekarang {new_status}!")
         return redirect('report_list')
+
+def live_search_api(request):
+    """Fungsi untuk pencarian data secara langsung tanpa reload [cite: 83]"""
+    query = request.GET.get('q', '')
+    reports = Report.objects.filter(title__icontains=query)[:10]
+    results = [
+        {'id': r.id, 'title': r.title, 'category': r.category, 'status': r.status}
+        for r in reports
+    ]
+    return JsonResponse({'results': results})
+
+def report_detail_api(request, pk):
+    """Fungsi untuk mengambil rincian data untuk Modal [cite: 84]"""
+    report = get_object_or_404(Report, pk=pk)
+    data = {
+        'title': report.title,
+        'category': report.category,
+        'description': report.description,
+        'location': report.location,
+        'status': report.status,
+    }
+    return JsonResponse(data)

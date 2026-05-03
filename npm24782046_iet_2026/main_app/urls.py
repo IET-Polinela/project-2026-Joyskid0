@@ -1,7 +1,7 @@
 # main_app/urls.py
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from usermanagement_24782046 import views as user_views # Import view registrasi
+from usermanagement_24782046 import views as user_views
 from . import views
 
 urlpatterns = [
@@ -14,4 +14,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', user_views.register, name='register'),
+    path('api/search/', views.live_search_api, name='api_search'),
+    path('api/report/<int:pk>/', views.report_detail_api, name='api_report_detail'),
 ]
