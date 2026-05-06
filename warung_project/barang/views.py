@@ -6,7 +6,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Barang
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.http import JsonResponse
 # Create your views here.
 
 class OwnerRequiredMixin(UserPassesTestMixin):
@@ -41,3 +41,23 @@ class BarangDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Barang
     template_name = 'barang_confirm_delete.html'
     success_url = reverse_lazy('barang_list')
+
+def search_barang(request):
+    query = request.GET.get('q')
+
+    if query:
+        barang = Barang.objects.filter(nama__icontains=query)
+    else:
+        barang = Barang.objects.all()
+
+    data = []
+    for b in barang:
+        data.append({
+            'id': b.id,
+            'nama': b.nama,
+            'kategori': b.kategori,
+            'harga_beli': b.harga_beli,
+            'stok': b.stok,
+        })
+
+    return JsonResponse({'barang': data})

@@ -7,32 +7,62 @@
 <a href="/barang/tambah/" class="btn btn-primary mb-3">Tambah Barang</a>
 {% endif %}
 
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari barang...">
+
 <table class="table">
-    <tr>
-        <th>Nama</th>
-        <th>Kategori</th>
-        <th>Harga Beli</th>
-        <th>Stok</th>
-        {% if user.groups.all.0.name == "Owner" %}
-        <th>Aksi</th>
-        {% endif %}
-    </tr>
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Kategori</th>
+            <th>Harga Beli</th>
+            <th>Stok</th>
+            {% if user.groups.all.0.name == "Owner" %}
+            <th>Aksi</th>
+            {% endif %}
+        </tr>
+    </thead>
 
-    {% for barang in barang_list %}
-    <tr>
-        <td>{{ barang.nama }}</td>
-        <td>{{ barang.kategori }}</td>
-        <td>{{ barang.harga_beli }}</td>
-        <td>{{ barang.stok }}</td>
+    <tbody id="tableBody">
+        {% for barang in barang_list %}
+        <tr>
+            <td>{{ barang.nama }}</td>
+            <td>{{ barang.kategori }}</td>
+            <td>{{ barang.harga_beli }}</td>
+            <td>{{ barang.stok }}</td>
 
-        {% if user.groups.all.0.name == "Owner" %}
-        <td>
-            <a href="/barang/{{barang.id}}/edit/" class="btn btn-warning btn-sm">Edit</a>
-            <a href="/barang/{{barang.id}}/hapus/" class="btn btn-danger btn-sm">Hapus</a>
-        </td>
-        {% endif %}
-    </tr>
-    {% endfor %}
+            {% if user.groups.all.0.name == "Owner" %}
+            <td>
+                <a href="/barang/{{barang.id}}/edit/" class="btn btn-warning btn-sm">Edit</a>
+                <a href="/barang/{{barang.id}}/hapus/" class="btn btn-danger btn-sm">Hapus</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('keyup', function() {
+    fetch(`/search/?q=${this.value}`)
+    .then(response => response.json())
+    .then(data => {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+
+        data.barang.forEach(item => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${item.nama}</td>
+                    <td>${item.kategori}</td>
+                    <td>${item.harga_beli}</td>
+                    <td>${item.stok}</td>
+                </tr>
+            `;
+        });
+    });
+});
+</script>
 
 {% endblock %}
