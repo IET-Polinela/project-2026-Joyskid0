@@ -2,112 +2,89 @@
 {% block content %}
 
 <style>
-    /* Reset & Styling Input agar seragam */
-    .form-control-custom {
+    input, select {
         display: block;
         width: 100%;
-        padding: 0.6rem 0.75rem;
+        padding: 0.5rem 0.75rem;
         font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
         color: #212529;
         background-color: #fff;
         border: 1px solid #dee2e6;
-        border-radius: 0.375rem;
-        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        border-radius: 8px;
+        transition: border-color .15s ease-in-out;
     }
-
-    /* Khusus untuk input di dalam input-group agar tidak dobel border/radius */
-    .input-group > .form-control-custom {
+    input:focus, select:focus {
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .15);
+    }
+    .input-group > input {
         flex: 1 1 auto;
         width: 1%;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
-
-    .form-control-custom:focus {
-        border-color: #86b7fe;
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
-    }
-
-    .card { border-radius: 12px; }
-    .btn { border-radius: 8px; padding: 10px 24px; font-weight: 500; }
 </style>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            
-            <!-- HEADER -->
-            <div class="mb-4">
-                <h2 class="fw-bold">{% if object %}Edit{% else %}Tambah{% endif %} Barang</h2>
-                <p class="text-muted">Pastikan semua data terisi dengan benar.</p>
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        
+        <!-- HEADER -->
+        <div class="d-flex align-items-end justify-content-between mb-3">
+            <div>
+                <h3 class="fw-bold mb-0">
+                    {% if object %}Edit Barang{% else %}Tambah Barang{% endif %}
+                </h3>
+                <p class="text-muted mb-0 small">Pastikan informasi stok sudah sesuai</p>
             </div>
-
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4 p-md-5">
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <div class="row g-4">
-                            <!-- BARIS 1 -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Nama Barang</label>
-                                <div class="form-wrapper">
-                                    {% if form.nama.field %} {{ form.nama }} {% else %} <input type="text" name="nama" class="form-control-custom" placeholder="Contoh: Laptop Asus"> {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Kategori</label>
-                                <div class="form-wrapper">
-                                    {{ form.kategori }}
-                                </div>
-                            </div>
-
-                            <!-- BARIS 2 (Penyebab Masalah Sebelumnya) -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Harga Beli</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light">Rp</span>
-                                    <!-- Jika pakai Django Form, pastikan widgetnya tidak menghancurkan layout -->
-                                    {{ form.harga_beli }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Jumlah Stok</label>
-                                <div class="form-wrapper">
-                                    {{ form.stok }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-5 opacity-25">
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="/barang/" class="btn btn-link text-decoration-none text-muted p-0">
-                                <i class="bi bi-arrow-left"></i> Batal & Kembali
-                            </a>
-                            <div class="d-flex gap-2">
-                                <button type="reset" class="btn btn-light border">Reset</button>
-                                <button type="submit" class="btn btn-primary shadow-sm">Simpan Data</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
+            <a href="/barang/" class="btn btn-outline-secondary btn-sm">Batal</a>
         </div>
+
+        <!-- FORM CARD -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Nama Barang</label>
+                            {{ form.nama }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Kategori</label>
+                            {{ form.kategori }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Harga Beli</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">Rp</span>
+                                {{ form.harga_beli }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Jumlah Stok</label>
+                            {{ form.stok }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-25">
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
-
-<script>
-    // Script otomatis untuk memberikan class Bootstrap ke input Django agar sejajar
-    document.querySelectorAll('input, select').forEach(function(el) {
-        if(!el.classList.contains('btn')) {
-            el.classList.add('form-control-custom');
-        }
-    });
-</script>
 
 {% endblock %}
