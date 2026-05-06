@@ -1,50 +1,109 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="row">
+<style>
+    :root {
+        --primary: #4e73df;
+        --success: #1cc88a;
+    }
+    body { background-color: #f8f9fc; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1); }
+    .stat-border-left-primary { border-left: 4px solid var(--primary); }
+    .stat-border-left-success { border-left: 4px solid var(--success); }
+    .text-xs { font-size: .7rem; }
+    .chart-area { height: 320px; }
+    .btn-rounded { border-radius: 50px; padding: 0.5rem 1.5rem; font-weight: 600; }
+</style>
 
-<div class="col-md-8">
-<div class="card shadow p-4">
-<h3>📊 Dashboard Statistik Stok</h3>
-<hr>
-<canvas id="myChart"></canvas>
-</div>
+<div class="container-fluid py-4">
+    <div class="row g-4 mb-4">
+        <!-- STATS -->
+        <div class="col-md-3">
+            <div class="card stat-border-left-primary p-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Barang</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800" id="total-val">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-box fs-2 text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card stat-border-left-success p-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">Kategori</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800" id="cat-val">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-tag fs-2 text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-end">
+            <div class="d-flex align-items-center justify-content-end h-100">
+                <div class="me-3">
+                    <h6 class="mb-0 fw-bold">Halo, {{ user.username }}</h6>
+                    <small class="text-muted">{% now "l, d F Y" %}</small>
+                </div>
+                <a href="/barang/" class="btn btn-primary btn-rounded">
+                    <i class="bi bi-gear-fill me-2"></i>Kelola
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="m-0 fw-bold text-primary">Grafik Distribusi Stok</h6>
+                    <span class="badge bg-light text-dark border">Data Otomatis</span>
+                </div>
+                <div class="chart-area">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="col-md-4">
-<div class="card shadow p-4">
-<h5>Selamat datang, {{ user.username }} 👋</h5>
-<p>Aplikasi manajemen stok warung.</p>
-<a href="/barang/" class="btn btn-primary">Kelola Barang</a>
-</div>
-</div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// FETCH DATA DARI DJANGO
-fetch('/chart-data/')
-.then(res => res.json())
-.then(data => {
+    fetch('/chart-data/')
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('total-val').innerText = d.totals.reduce((a, b) => a + b, 0);
+        document.getElementById('cat-val').innerText = d.labels.length;
 
-    const ctx = document.getElementById('myChart');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: 'Total Stok per Kategori',
-                data: data.totals,
-                backgroundColor: 'rgba(54, 162, 235, 0.7)'
-            }]
-        },
-        options: {
-            responsive: true
-        }
+        new Chart(document.getElementById('myChart'), {
+            type: 'bar',
+            data: {
+                labels: d.labels,
+                datasets: [{
+                    data: d.totals,
+                    backgroundColor: '#4e73df',
+                    borderRadius: 5,
+                    barPercentage: 0.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { drawBorder: false } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
     });
-
-});
 </script>
 
 {% endblock %}

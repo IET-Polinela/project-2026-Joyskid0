@@ -1,21 +1,100 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="row justify-content-center">
-<div class="col-md-4">
-<div class="card shadow p-4 mt-5">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border: none;
+        border-radius: 16px;
+    }
+    .login-header {
+        font-weight: 700;
+        color: #333;
+        letter-spacing: -0.5px;
+    }
+    .form-control-modern {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s ease-in-out;
+    }
+    .form-control-modern:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        outline: none;
+    }
+    .btn-login {
+        padding: 0.75rem;
+        font-weight: 600;
+        border-radius: 10px;
+        background: #0d6efd;
+        transition: transform 0.1s ease;
+    }
+    .btn-login:active {
+        transform: scale(0.98);
+    }
+    form p {
+        margin-bottom: 1.25rem;
+    }
+    label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+</style>
 
-<h3 class="text-center mb-3">Login</h3>
-<hr>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-5 col-lg-4">
+            
+            <div class="card shadow-lg p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="login-header">Selamat Datang</h2>
+                    <p class="text-muted small">Silakan masuk ke akun Anda</p>
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary w-100 mt-2">Login</button>
-</form>
+                <form method="post" id="loginForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-fields">
+                        {{ form.as_p }}
+                    </div>
 
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-login shadow-sm">
+                            Masuk Sekarang
+                        </button>
+                    </div>
+                </form>
+
+                {% if form.errors %}
+                <div class="alert alert-danger mt-3 small pb-0">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-</div>
-</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('#loginForm input');
+        inputs.forEach(input => {
+            input.classList.add('form-control-modern');
+            if(input.type === 'text') input.placeholder = 'Username';
+            if(input.type === 'password') input.placeholder = '••••••••';
+        });
+    });
+</script>
 
 {% endblock %}
