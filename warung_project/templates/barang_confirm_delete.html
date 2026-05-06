@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Hapus Barang?</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Ya, Hapus</button>
+</form>
+
+{% endblock %}

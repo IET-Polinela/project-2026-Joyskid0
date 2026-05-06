@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Daftar Barang</h2>
+
+{% if user.groups.all.0.name == "Owner" %}
+<a href="/barang/tambah/" class="btn btn-primary mb-3">Tambah Barang</a>
+{% endif %}
+
+<table class="table">
+    <tr>
+        <th>Nama</th>
+        <th>Kategori</th>
+        <th>Harga Beli</th>
+        <th>Stok</th>
+        {% if user.groups.all.0.name == "Owner" %}
+        <th>Aksi</th>
+        {% endif %}
+    </tr>
+
+    {% for barang in barang_list %}
+    <tr>
+        <td>{{ barang.nama }}</td>
+        <td>{{ barang.kategori }}</td>
+        <td>{{ barang.harga_beli }}</td>
+        <td>{{ barang.stok }}</td>
+
+        {% if user.groups.all.0.name == "Owner" %}
+        <td>
+            <a href="/barang/{{barang.id}}/edit/" class="btn btn-warning btn-sm">Edit</a>
+            <a href="/barang/{{barang.id}}/hapus/" class="btn btn-danger btn-sm">Hapus</a>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
