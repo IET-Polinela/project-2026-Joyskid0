@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h2>Dashboard</h2>
-<p>Selamat datang, {{ user.username }}</p>
+
+<div class="row">
+
+<div class="col-md-8">
+<div class="card shadow p-4">
+<h3>Dashboard</h3>
+<hr>
+<h5>Selamat datang, <b>{{ user.username }}</b> 👋</h5>
+<p>Sistem manajemen stok warung berbasis web.</p>
+<a href="/barang/" class="btn btn-primary mt-2">Kelola Barang</a>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card shadow p-4 text-center">
+<h5 class="card-title">Info Aplikasi</h5>
+<p>Fokus Async & Security</p>
+</div>
+</div>
+
+</div>
+
 {% endblock %}

@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Hapus Barang?</h2>
+<div class="row justify-content-center">
+<div class="col-md-5">
+<div class="card shadow p-4 text-center">
+
+<h3>Hapus Barang?</h3>
+<p>Data tidak bisa dikembalikan.</p>
 
 <form method="post">
     {% csrf_token %}
-    <button class="btn btn-danger">Ya, Hapus</button>
+    <button class="btn btn-danger">Ya Hapus</button>
+    <a href="/barang/" class="btn btn-secondary">Batal</a>
 </form>
+
+</div>
+</div>
+</div>
 
 {% endblock %}
