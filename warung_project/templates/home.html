@@ -5,21 +5,46 @@
 
 <div class="col-md-8">
 <div class="card shadow p-4">
-<h3>Dashboard</h3>
+<h3>📊 Dashboard Statistik Stok</h3>
 <hr>
-<h5>Selamat datang, <b>{{ user.username }}</b> 👋</h5>
-<p>Sistem manajemen stok warung berbasis web.</p>
-<a href="/barang/" class="btn btn-primary mt-2">Kelola Barang</a>
+<canvas id="myChart"></canvas>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card shadow p-4 text-center">
-<h5 class="card-title">Info Aplikasi</h5>
-<p>Fokus Async & Security</p>
+<div class="card shadow p-4">
+<h5>Selamat datang, {{ user.username }} 👋</h5>
+<p>Aplikasi manajemen stok warung.</p>
+<a href="/barang/" class="btn btn-primary">Kelola Barang</a>
 </div>
 </div>
 
 </div>
+
+<script>
+// FETCH DATA DARI DJANGO
+fetch('/chart-data/')
+.then(res => res.json())
+.then(data => {
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Total Stok per Kategori',
+                data: data.totals,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)'
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+});
+</script>
 
 {% endblock %}

@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from .models import Barang
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.db.models import Sum
 # Create your views here.
 
 class OwnerRequiredMixin(UserPassesTestMixin):
@@ -61,3 +62,22 @@ def search_barang(request):
         })
 
     return JsonResponse({'barang': data})
+
+def chart_data(request):
+    data = (
+        Barang.objects
+        .values('kategori')
+        .annotate(total_stok=Sum('stok'))
+    )
+
+    labels = []
+    totals = []
+
+    for item in data:
+        labels.append(item['kategori'])
+        totals.append(item['total_stok'])
+
+    return JsonResponse({
+        'labels': labels,
+        'totals': totals
+    })
