@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active">Detail Laporan</li>
+  </ol>
+</nav>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-dark text-white py-3">
+        <h4 class="mb-0">{{ report.title }}</h4>
+    </div>
+    <div class="card-body p-4">
+        <div class="row">
+            <div class="col-md-8">
+                <p class="text-muted mb-1">Deskripsi Masalah:</p>
+                <p class="lead">{{ report.description }}</p>
+            </div>
+            <div class="col-md-4 border-start">
+                <p><strong>Kategori:</strong> {{ report.category }}</p>
+                <p><strong>Lokasi:</strong> {{ report.location }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-info">{{ report.status }}</span></p>
+                <p><strong>Dilaporkan:</strong> <small class="text-muted">{{ report.created_at }}</small></p>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex gap-2">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Kembali</a>
+            {% if user.is_admin %}
+                <a href="{% url 'update_report' report.pk %}" class="btn btn-warning">Edit Laporan</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

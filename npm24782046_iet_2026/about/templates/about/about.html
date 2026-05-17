@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+    <li class="breadcrumb-item active">Tentang Project</li>
+  </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold mb-3">Academic Project</span>
+            <h1 class="fw-bold display-5">Transformasi Pelaporan Digital</h1>
+            <p class="text-muted col-md-8 mx-auto">Sebuah inisiatif teknologi untuk meningkatkan transparansi infrastruktur di Kota Balige.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <div class="row g-0">
+                <div class="col-md-6 p-4 p-md-5 bg-white">
+                    <h4 class="fw-bold mb-4">Latar Belakang</h4>
+                    <p class="text-secondary mb-4" style="line-height: 1.8; text-align: justify;">
+                        Website <strong>Kota Balige</strong> merupakan implementasi nyata dari mata kuliah <strong>Pemrograman Internet</strong>. Project ini berfokus pada pengembangan sistem manajemen laporan masyarakat yang mengutamakan keamanan data dan akurasi informasi.
+                    </p>
+                    <p class="text-secondary" style="line-height: 1.8; text-align: justify;">
+                        Melalui sistem ini, warga tidak hanya mengirimkan laporan, tetapi juga terlibat dalam pengawasan pembangunan infrastruktur daerah secara real-time dan terorganisir.
+                    </p>
+                </div>
+                <div class="col-md-6 p-4 p-md-5 bg-primary text-white d-flex align-items-center">
+                    <div>
+                        <h4 class="fw-bold mb-4 text-white">Teknologi & Framework</h4>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="fs-2 me-3"><i class="bi bi-layers"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Python & Django</h6>
+                                <p class="small opacity-75">Dipilih sebagai core engine karena skalabilitasnya yang tinggi dan sistem keamanan bawaan yang sangat kuat.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-0">
+                            <div class="fs-2 me-3"><i class="bi bi-shield-lock"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Role-Based Access Control</h6>
+                                <p class="small opacity-75">Implementasi sistem otorisasi (RBAC) yang memisahkan hak akses Admin dan Citizen secara ketat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-3">
+                    <h6 class="text-uppercase text-muted fw-bold small">Course Context</h6>
+                    <p class="fw-bold">Pemrograman Internet</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <h6 class="text-uppercase text-muted fw-bold small">Primary Framework</h6>
+                    <p class="fw-bold text-primary">Django 5.x</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <h6 class="text-uppercase text-muted fw-bold small">Interface Library</h6>
+                    <p class="fw-bold">Bootstrap 5 & Vanilla JS</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-5 border-top text-center text-muted">
+            <p class="small mb-0 fst-italic">Dikembangkan dengan dedikasi sebagai bagian dari pembelajaran akademik untuk solusi digital yang lebih baik.</p>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .bg-primary-subtle {
+        background-color: #e7f1ff;
+    }
+    .card {
+        transition: all 0.3s ease;
+    }
+    h1, h4 {
+        letter-spacing: -0.5px;
+    }
+</style>
+{% endblock %}
