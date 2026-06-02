@@ -1,0 +1,1 @@
+console.log("Aplikasi Utama Citizen Portal Berhasil Dimuat.");
