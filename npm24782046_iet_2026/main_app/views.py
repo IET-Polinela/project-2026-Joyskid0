@@ -63,7 +63,7 @@ class ReportUpdateStatusView(LoginRequiredMixin, AdminOnlyMixin, View):
 def live_search_api(request):
     """Fungsi untuk pencarian data secara langsung tanpa reload [cite: 83]"""
     query = request.GET.get('q', '')
-    reports = Report.objects.filter(title__icontains=query)[:10]
+    reports = Report.objects.filter(title__icontains=query)
     results = [
         {'id': r.id, 'title': r.title, 'category': r.category, 'status': r.status}
         for r in reports

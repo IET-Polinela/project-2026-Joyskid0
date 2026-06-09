@@ -1,31 +1,56 @@
-const BASE_URL = 'http://127.0.0.1:8000';
+async function requestAPI(endpoint, method = 'GET', payload = null) {
+    const baseUrl = 'http://127.0.0.1:8000';
+    const token = localStorage.getItem('accessToken');
 
-async function requestAPI(endpoint, method = 'GET', bodyData = null) {
-    const url = `${BASE_URL}${endpoint}`;
-    
+    console.log('Token yang dikirim:', token);
+
     const headers = {
         'Content-Type': 'application/json'
     };
 
-    const accessToken = localStorage.getItem('access_token');
-    if (accessToken) {
-        headers['Authorization'] = `Bearer ${accessToken}`;
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
 
     const options = {
-        method: method,
-        headers: headers
+        method,
+        headers
     };
 
-    if (bodyData) {
-        options.body = JSON.stringify(bodyData);
+    if (payload && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+        options.body = JSON.stringify(payload);
     }
 
     try {
-        const response = await fetch(url, options);
-        return response;
+        const response = await fetch(`${baseUrl}${endpoint}`, options);
+
+        console.log(`Status Response (${endpoint}):`, response.status);
+
+        if (response.status === 401) {
+            alert('Session login habis. Silakan login ulang.');
+            localStorage.removeItem('accessToken');
+            window.location.hash = '#login';
+            if (typeof handleRouting === 'function') {
+                handleRouting();
+            }
+            return null;
+        }
+
+        let data = {};
+        try {
+            data = await response.json();
+        } catch {
+            data = {};
+        }
+
+        return {
+            status: response.status,
+            data
+        };
+
     } catch (error) {
-        console.error('Terjadi kesalahan koneksi API:', error);
-        throw error;
+        console.error('API Request Error:', error);
+        alert('Gagal terhubung ke server Django.');
+        return null;
     }
 }

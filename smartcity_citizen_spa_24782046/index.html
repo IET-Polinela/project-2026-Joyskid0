@@ -2,30 +2,521 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Warga Smart City Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Smart City Portal</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    >
+
     <style>
-        body { background-color: #f4f6f9; }
-        .spa-container { min-height: calc(100vh - 80px); }
+
+        body{
+            background:#f4f6f9;
+        }
+
+        .spa-container{
+            min-height:calc(100vh - 80px);
+        }
+
+        .sidebar-card{
+            border:none;
+            border-radius:16px;
+        }
+
+        .main-card{
+            border:none;
+            border-radius:18px;
+        }
+
+        .card{
+            border:none;
+            border-radius:16px;
+        }
+
+        .progress{
+            border-radius:20px;
+        }
+
+        .progress-bar{
+            border-radius:20px;
+        }
+
     </style>
+
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="bi bi-buildings-fill me-2"></i>Smart City Portal
-            </a>
-            <div id="nav-menus" class="ms-auto"></div>
+
+<!-- LOGIN -->
+<div
+    class="container mt-5"
+    id="loginSection"
+>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body p-4">
+
+                    <h3 class="fw-bold text-center mb-4">
+
+                        Login Warga
+
+                    </h3>
+
+                    <form id="loginForm">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 fw-bold"
+                        >
+
+                            Login
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
         </div>
-    </nav>
 
-    <main class="container-fluid px-4 mt-4 spa-container" id="app-content"></main>
+    </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/router.js"></script>
+</div>
+
+<!-- DASHBOARD -->
+<div
+    id="dashboardSection"
+    style="display:none;"
+>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+
+    <div class="container-fluid px-4">
+
+        <a class="navbar-brand fw-bold" href="#">
+
+            <i class="bi bi-buildings-fill me-2"></i>
+            Smart City Portal
+
+        </a>
+
+        <div class="ms-auto">
+
+            <button
+                class="btn btn-light fw-bold"
+                data-bs-toggle="modal"
+                data-bs-target="#reportModal"
+            >
+
+                <i class="bi bi-plus-circle me-1"></i>
+                Tambah Laporan
+
+            </button>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+<main class="container-fluid px-4 mt-4 spa-container">
+
+    <div class="row g-4">
+
+        <!-- SIDEBAR -->
+        <div class="col-12 col-lg-3">
+
+            <div class="card sidebar-card shadow-sm p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-bar-chart-fill me-2"></i>
+                    Rekap Status
+
+                </h5>
+
+                <div class="mb-3">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>Draft</span>
+
+                        <strong id="statDraft">0</strong>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>Diproses</span>
+
+                        <strong id="statDiproses">0</strong>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>Selesai</span>
+
+                        <strong id="statSelesai">0</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="col-12 col-lg-9">
+
+            <div class="card main-card shadow-sm p-4">
+
+                <!-- TAB -->
+                <div class="d-flex gap-2 mb-4">
+
+                    <button
+                        class="btn btn-primary active"
+                        id="my-reports-tab"
+                        onclick="loadDashboardData('my_reports',1)"
+                    >
+
+                        Laporan Saya
+
+                    </button>
+
+                    <button
+                        class="btn btn-outline-primary"
+                        id="feed-tab"
+                        onclick="loadDashboardData('feed',1)"
+                    >
+
+                        Feed Kota
+
+                    </button>
+
+                </div>
+
+                <!-- LIST -->
+                <div
+                    class="row"
+                    id="listContainer"
+                ></div>
+
+                <!-- PAGINATION -->
+                <div
+                    class="mt-4"
+                    id="paginationContainer"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+
+<!-- MODAL -->
+<div
+    class="modal fade"
+    id="reportModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header bg-primary text-white">
+
+                <h5
+                    class="modal-title fw-bold"
+                    id="reportModalLabel"
+                >
+
+                    Buat Laporan Baru
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body p-4">
+
+                <form id="reportForm">
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Judul Laporan
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="reportTitle"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Deskripsi
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            rows="4"
+                            id="reportDescription"
+                            required
+                        ></textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Kategori
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="reportCategory"
+                        >
+
+                            <option value="Fasilitas Publik">
+                                Fasilitas Publik
+                            </option>
+
+                            <option value="Keamanan">
+                                Keamanan
+                            </option>
+
+                            <option value="Kebersihan">
+                                Kebersihan
+                            </option>
+
+                            <option value="Infrastruktur">
+                                Infrastruktur
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label fw-bold">
+                            Lokasi
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="reportLocation"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary fw-bold"
+                            id="btnDraft"
+                        >
+
+                            Simpan Draft
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary fw-bold"
+                            id="btnSubmit"
+                        >
+
+                            Ajukan
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JS -->
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+
+<!-- LOGIN SCRIPT -->
+<script>
+
+document
+.getElementById('loginForm')
+.addEventListener(
+    'submit',
+    async function(e){
+
+        e.preventDefault();
+
+        const username =
+            document.getElementById('username').value;
+
+        const password =
+            document.getElementById('password').value;
+
+        try{
+
+            const response = await fetch(
+                'http://127.0.0.1:8000/api/token/',
+                {
+                    method:'POST',
+
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+
+                    body:JSON.stringify({
+                        username,
+                        password
+                    })
+                }
+            );
+
+            const data =
+                await response.json();
+
+            if(response.status === 200){
+
+                localStorage.setItem(
+                    'accessToken',
+                    data.access
+                );
+
+                alert('Login berhasil!');
+
+                document
+                .getElementById('loginSection')
+                .style.display = 'none';
+
+                document
+                .getElementById('dashboardSection')
+                .style.display = 'block';
+
+                loadDashboardData();
+
+            }else{
+
+                alert('Username atau password salah.');
+            }
+
+        }catch(error){
+
+            console.error(error);
+
+            alert('Gagal terhubung ke server.');
+        }
+    }
+);
+
+// AUTO LOGIN
+if(localStorage.getItem('accessToken')){
+
+    document
+    .getElementById('loginSection')
+    .style.display = 'none';
+
+    document
+    .getElementById('dashboardSection')
+    .style.display = 'block';
+
+    loadDashboardData();
+}
+
+</script>
+
 </body>
 </html>
