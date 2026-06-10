@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active fw-bold text-primary" aria-current="page"> Home </li>
+  </ol>
+</nav>
+
+<div class="p-5 mb-5 rounded-5 shadow-sm border-0 position-relative overflow-hidden" 
+     style="background: linear-gradient(135deg, #0d6efd 0%, #001f3f 100%);">
+    
+    <div class="position-absolute top-0 end-0 translate-middle-y opacity-10" style="margin-right: -20px;">
+        <i class="bi bi-house-heart-fill" style="font-size: 220px; color: white;"></i>
+    </div>
+
+    <div class="container py-4 position-relative text-white">
+        <h1 class="display-4 fw-bold mb-3 text-shadow">Horas, Halak Hita! 👋</h1>
+        <h2 class="h3 fw-light mb-4 opacity-90">Pature Balige, Marhite Laporan Digital.</h2>
+        
+        <p class="col-md-7 fs-5 fw-light opacity-75 mb-5">
+            Selamat datang di platform aspirasi masyarakat Balige. Mari bergotong-royong membangun Kota kita dengan melaporkan setiap kendala infrastruktur secara transparan dan cepat.
+        </p>
+        
+        <div class="d-flex flex-column flex-sm-row gap-3">
+            <a href="{% url 'add_report' %}" class="btn btn-light btn-lg px-5 rounded-pill fw-bold text-primary btn-load-link shadow-lg">
+                <i class="bi bi-pencil-fill me-2"></i> Buat Laporan
+            </a>
+            <a href="{% url 'dashboard:index' %}" class="btn btn-warning btn-lg px-5 rounded-pill fw-bold shadow-lg">
+                <i class="bi bi-bar-chart-fill me-2"></i> Statistik Kota
+            </a>
+            <a href="{% url 'report_list' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill fw-bold border-2">
+                <i class="bi bi-search me-2"></i> Eksplorasi
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5 text-center">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
+            <div class="card-body">
+                <div class="mb-3 text-primary">
+                    <div class="d-inline-flex p-3 bg-primary-subtle rounded-circle mb-2">
+                        <i class="bi bi-megaphone fs-2"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Aspirasi Warga</h5>
+                <p class="text-muted small mb-0">Laporkan jalan rusak, lampu mati, atau kendala fasilitas umum lainnya di seputaran Balige dengan praktis.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white border-top border-primary border-4">
+            <div class="card-body">
+                <div class="mb-3 text-success">
+                    <div class="d-inline-flex p-3 bg-success-subtle rounded-circle mb-2">
+                        <i class="bi bi-patch-check fs-2"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Verifikasi Cepat</h5>
+                <p class="text-muted small mb-0">Setiap data akan diverifikasi oleh Admin berpengalaman untuk memastikan laporan segera ditindaklanjuti.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <a href="{% url 'dashboard:index' %}" class="text-decoration-none text-dark">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-lift bg-white">
+                <div class="card-body">
+                    <div class="mb-3 text-info">
+                        <div class="d-inline-flex p-3 bg-info-subtle rounded-circle mb-2">
+                            <i class="bi bi-bar-chart-line fs-2"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold">Transparansi Balige</h5>
+                    <p class="text-muted small mb-3">Pantau status laporan secara real-time melalui Dashboard statistik yang dinamis.</p>
+                    <span class="text-primary fw-bold small">Buka Dashboard <i class="bi bi-arrow-right"></i></span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .hover-lift {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    .hover-lift:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+    .bg-primary-subtle { background-color: #e7f1ff; }
+    .bg-success-subtle { background-color: #e6fffa; }
+    .bg-info-subtle { background-color: #e7faff; }
+    .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+</style>
+{% endblock %}

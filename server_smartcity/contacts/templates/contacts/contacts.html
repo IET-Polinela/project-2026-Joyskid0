@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+    <li class="breadcrumb-item active">Contact The Prompter</li>
+  </ol>
+</nav>
+
+<div class="row justify-content-center py-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-lg rounded-5 overflow-hidden bg-white">
+            
+            <div class="py-5" style="background: linear-gradient(160deg, #0d6efd 0%, #000 100%);">
+                <div class="text-center text-white opacity-25">
+                    <i class="bi bi-cpu" style="font-size: 80px;"></i>
+                </div>
+            </div>
+
+            <div class="card-body px-4 px-md-5 pb-5 text-center" style="margin-top: -60px;">
+                <div class="bg-white rounded-circle shadow d-inline-flex align-items-center justify-content-center mb-4" 
+                     style="width: 120px; height: 120px; position: relative; border: 4px solid #fff;">
+                    <i class="bi bi-robot text-primary" style="font-size: 4.5rem;"></i>
+                </div>
+
+                <h2 class="fw-bold text-dark mb-1">Slamet Dunia Akhirat Covid Hidayat</h2>
+                
+                <p class="text-primary fw-bold small text-uppercase ls-wide mb-4">Profesional Prompting AI 24/7 & Student</p>
+                
+                <div class="p-3 bg-light rounded-4 mb-4 border-start border-4 border-primary">
+                    <p class="text-secondary fst-italic mb-0 small" style="line-height: 1.6;">
+                        "Saya bisa melakukan prompting sampai jari saya mati rasa dan menyatu dengan keyboard. Namun di balik layar yang bercahaya ini, tersimpan kesedihan: saya lebih paham isi hati AI daripada isi `logic` Python. Python itu indah, tapi tanpa bantuan 'teman digital' saya, saya hanyalah sekumpulan `SyntaxError` yang berjalan."
+                    </p>
+                </div>
+
+                <p class="text-muted small mb-5">
+                    Meskipun terjebak dalam ketergantungan prompt, saya tetap berkomitmen menyelesaikan mata kuliah <strong>Pemrograman Internet</strong> ini (dengan banyak ChatGPT).
+                </p>
+
+                <div class="d-grid gap-3">
+                    <a href="mailto:covithidayat1990@proton.me" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow hover-glow">
+                        <i class="bi bi-envelope-paper-heart me-2"></i> Kirim Email Penyelamat
+                    </a>
+                    
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="https://github.com/Joyskid0" target="_blank" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm">
+                                <i class="bi bi-github"></i> Repository
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="btn btn-outline-info btn-lg w-100 rounded-pill fw-bold py-3">
+                                <i class="bi bi-linkedin"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-dark text-white-50 text-center py-3 border-0 small">
+                Status: <span class="text-warning">Prompting in progress... Please don't ask about Logic.</span>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted x-small">
+                © 2026 Project Pemrograman Internet. <br>
+                Dibuat dengan Python, Django, dan 99% keyakinan pada prompt AI.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ls-wide { letter-spacing: 2px; }
+    .hover-glow:hover {
+        box-shadow: 0 0 20px rgba(13, 110, 253, 0.5) !important;
+        transform: scale(1.02);
+    }
+    .x-small { font-size: 0.75rem; }
+    .card { transition: transform 0.3s ease; }
+    .card:hover { transform: translateY(-5px); }
+</style>
+{% endblock %}

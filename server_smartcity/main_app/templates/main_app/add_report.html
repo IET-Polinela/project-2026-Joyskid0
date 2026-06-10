@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white py-3"><h5 class="mb-0 fw-bold">Form Laporan</h5></div>
+            <div class="card-body p-4 p-md-5 bg-white">
+                <form method="POST" class="form-loading">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Judul</label>
+                        <input type="text" name="title" class="form-control" required value="{{ object.title|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kategori</label>
+                        <select name="category" class="form-select" required>
+                            <option value="Infrastruktur" {% if object.category == 'Infrastruktur' %}selected{% endif %}>Infrastruktur</option>
+                            <option value="Kebersihan" {% if object.category == 'Kebersihan' %}selected{% endif %}>Kebersihan</option>
+                            <option value="Utilitas" {% if object.category == 'Utilitas' %}selected{% endif %}>Utilitas</option>
+                            <option value="Keamanan" {% if object.category == 'Keamanan' %}selected{% endif %}>Keamanan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Lokasi</label>
+                        <input type="text" name="location" class="form-control" required value="{{ object.location|default:'' }}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Deskripsi</label>
+                        <textarea name="description" class="form-control" rows="5" required>{{ object.description|default:'' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm btn-load">
+                        Kirim Laporan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
