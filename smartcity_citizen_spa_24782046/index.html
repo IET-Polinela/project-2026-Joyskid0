@@ -450,15 +450,14 @@ document
 
         try{
 
+            // PERBAIKAN: URL murni langsung mengarah ke endpoint token API backend kamu
             const response = await fetch(
-                'http://127.0.0.1:8000/api/token/',
+                'http://103.151.63.86:8001/api/token/',
                 {
                     method:'POST',
-
                     headers:{
                         'Content-Type':'application/json'
                     },
-
                     body:JSON.stringify({
                         username,
                         password
@@ -496,7 +495,6 @@ document
         }catch(error){
 
             console.error(error);
-
             alert('Gagal terhubung ke server.');
         }
     }
