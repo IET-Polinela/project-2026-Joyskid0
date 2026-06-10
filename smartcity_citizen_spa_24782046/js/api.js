@@ -1,5 +1,5 @@
 async function requestAPI(endpoint, method = 'GET', payload = null) {
-    const baseUrl = 'http://127.0.0.1:8000';
+    const baseUrl = 'http://103.151.63.86:8001/api/';
     const token = localStorage.getItem('accessToken');
 
     console.log('Token yang dikirim:', token);
