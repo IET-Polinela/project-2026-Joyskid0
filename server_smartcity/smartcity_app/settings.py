@@ -59,9 +59,9 @@ WSGI_APPLICATION = 'smartcity_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'iet_PI_db',
-        'USER': 'postgres',
-        'PASSWORD': '177005',
+        'NAME': 'db_mhs01',
+        'USER': 'user_mhs01',
+        'PASSWORD': 'mhs01',
         'HOST': 'localhost',
         'PORT': '5432',
     }
