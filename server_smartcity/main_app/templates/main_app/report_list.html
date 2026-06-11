@@ -2,18 +2,26 @@
 
 {% block content %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-        <li class="breadcrumb-item active">Reports</li>
+    <ol class="breadcrumb mb-4 bg-transparent p-0">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+        <li class="breadcrumb-item active fw-bold text-primary" aria-current="page">Reports</li>
     </ol>
 </nav>
 
-<!-- Header: Responsif untuk Mobile & Desktop -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <h2 class="fw-bold text-primary mb-0">Manajemen Laporan Balige</h2>
-    <div class="d-flex gap-2 w-100 w-md-auto">
-        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm flex-grow-1" placeholder="Cari judul laporan..." style="max-width: 300px;">
-        <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm flex-shrink-0">+ Tambah</a>
+    <div class="d-flex flex-wrap gap-2 w-100 w-md-auto align-items-center">
+        <form method="GET" action="" class="d-flex gap-2 m-0 flex-grow-1 flex-md-grow-0">
+            <select name="status_filter" id="statusFilterDropdown" class="form-select rounded-pill ps-3 pe-4 shadow-sm" onchange="this.form.submit();" style="min-width: 160px; height: 38px;">
+                <option value="">Semua Status</option>
+                <option value="REPORTED" {% if status_filter == 'REPORTED' %}selected{% endif %}>Reported</option>
+                <option value="VERIFIED" {% if status_filter == 'VERIFIED' %}selected{% endif %}>Verified</option>
+                <option value="IN_PROGRESS" {% if status_filter == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                <option value="RESOLVED" {% if status_filter == 'RESOLVED' %}selected{% endif %}>Resolved</option>
+            </select>
+        </form>
+        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm flex-grow-1" placeholder="Cari judul laporan..." style="max-width: 240px; height: 38px;">
+        <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm flex-shrink-0" style="height: 38px; display: inline-flex; align-items: center;">+ Tambah</a>
     </div>
 </div>
 
@@ -42,8 +50,9 @@
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="{{ report.pk }}">Detail</button>
+                        
                         {% if report.status != 'RESOLVED' %}
-                        <form action="{% url 'update_status' report.pk %}" method="POST" class="form-loading">
+                        <form action="{% url 'update_status' report.pk %}" method="POST" class="form-loading m-0">
                             {% csrf_token %}
                             <input type="hidden" name="status" value="{% if report.status == 'REPORTED' %}VERIFIED{% elif report.status == 'VERIFIED' %}IN_PROGRESS{% else %}RESOLVED{% endif %}">
                             <button type="submit" class="btn btn-sm {% if report.status == 'REPORTED' %}btn-primary{% else %}btn-warning text-dark{% endif %} px-3 fw-bold">
@@ -51,16 +60,52 @@
                             </button>
                         </form>
                         {% endif %}
+                        
                         <a href="{% url 'delete_report' report.pk %}" class="btn btn-sm btn-danger px-3 fw-bold">Hapus</a>
                     </div>
                 </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center py-5 text-muted">Tidak ada data laporan ditemukan.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
-<!-- Modal Detail -->
+{% if is_paginated %}
+<nav aria-label="Page navigation" class="d-flex justify-content-center mt-4">
+    <ul class="pagination shadow-sm rounded-pill overflow-hidden">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status_filter={{ status_filter }}{% endif %}">&laquo; Prev</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo; Prev</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link bg-primary border-primary">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if status_filter %}&status_filter={{ status_filter }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status_filter={{ status_filter }}{% endif %}">Next &raquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-4 shadow">
@@ -81,6 +126,23 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('liveSearch');
     const tableBody = document.getElementById('reportTableBody');
+    const statusDropdown = document.getElementById('statusFilterDropdown');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
 
     let debounceTimer;
     searchInput.addEventListener('input', function() {
@@ -90,23 +152,64 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/api/search/?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    // PENTING: Baris di bawah ini untuk memunculkan SS 6 di Console
                     console.log("Data JSON diterima dari API:", data); 
 
                     tableBody.innerHTML = '';
                     if (data.results.length > 0) {
                         data.results.forEach(report => {
+                            let badgeHTML = '';
+                            if (report.status === 'VERIFIED') {
+                                badgeHTML = `<span class="badge bg-primary px-3 py-2">Verified</span>`;
+                            } else if (report.status === 'IN_PROGRESS') {
+                                badgeHTML = `<span class="badge bg-warning text-dark px-3 py-2">In Progress</span>`;
+                            } else if (report.status === 'RESOLVED') {
+                                badgeHTML = `<span class="badge bg-success px-3 py-2">Resolved</span>`;
+                            } else {
+                                badgeHTML = `<span class="badge bg-secondary px-3 py-2">Reported</span>`;
+                            }
+
+                            let actionFormHTML = '';
+                            if (report.status !== 'RESOLVED') {
+                                let nextStatus = '';
+                                let btnClass = '';
+                                let btnText = '';
+
+                                if (report.status === 'REPORTED') {
+                                    nextStatus = 'VERIFIED';
+                                    btnClass = 'btn-primary';
+                                    btnText = 'Verifikasi';
+                                } else if (report.status === 'VERIFIED') {
+                                    nextStatus = 'IN_PROGRESS';
+                                    btnClass = 'btn-warning text-dark';
+                                    btnText = 'Proses';
+                                } else {
+                                    nextStatus = 'RESOLVED';
+                                    btnClass = 'btn-warning text-dark';
+                                    btnText = 'Selesai';
+                                }
+
+                                actionFormHTML = `
+                                    <form action="/report/update-status/${report.id}/" method="POST" class="form-loading m-0">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
+                                        <input type="hidden" name="status" value="${nextStatus}">
+                                        <button type="submit" class="btn btn-sm ${btnClass} px-3 fw-bold">${btnText}</button>
+                                    </form>
+                                `;
+                            }
+
                             tableBody.innerHTML += `
-                                <tr>
+                                <tr id="report-row-${report.id}">
                                     <td class="ps-4">
                                         <div class="fw-bold fs-5 text-dark">${report.title}</div>
                                         <span class="badge bg-light text-primary border border-primary-subtle px-2">${report.category}</span>
                                     </td>
+                                    <td class="text-center">${badgeHTML}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-secondary px-3 py-2">${report.status}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="${report.id}">Detail</button>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button class="btn btn-sm btn-info text-dark px-3 fw-bold btn-detail" data-id="${report.id}">Detail</button>
+                                            ${actionFormHTML}
+                                            <a href="/report/delete/${report.id}/" class="btn btn-sm btn-danger px-3 fw-bold">Hapus</a>
+                                        </div>
                                     </td>
                                 </tr>`;
                         });
@@ -117,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500); 
     });
 
-    // Event Delegation agar tombol detail tetap aktif setelah search
     tableBody.addEventListener('click', function(e) {
         if (e.target.classList.contains('btn-detail')) {
             const reportId = e.target.getAttribute('data-id');

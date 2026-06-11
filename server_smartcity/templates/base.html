@@ -1,37 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Smart City Balige</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #0b1329;        
+            --glass-nav: #0f172a;      
+            --accent-cyan: #00e5ff;    
+            --accent-blue: #3b82f6;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc; 
+            color: #334155;
+        }
+
+        /* --- NAVBAR GLASSMORPHISM MODERN --- */
+        .navbar-custom {
+            background-color: rgba(15, 23, 42, 0.96) !important;
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Logo Navbar Utama */
+        .brand-container {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-box {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.02) 100%);
+            border: 1.5px solid rgba(0, 229, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0; 
+        }
+
+        .logo-box i {
+            font-size: 1.3rem;
+            color: var(--accent-cyan);
+            filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
+        }
+
+        .brand-text-group {
+            display: flex;
+            flex-direction: column;
+            margin-left: 0.75rem;
+        }
+
+        .main-brand-title {
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+
+        .sub-brand-slogan {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #94a3b8 !important;
+            letter-spacing: 1.5px;
+            margin-top: 0.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Radar Pulse Slogan */
+        .radar-pulse {
+            width: 7px;
+            height: 7px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7);
+            animation: radarAnimation 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes radarAnimation {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+
+        /* --- STYLING LINK MENU --- */
+        .nav-link {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #94a3b8 !important;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- USER SESSION CONTAINER --- */
+        .user-dropdown-toggle {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 0.4rem 0.8rem !important;
+        }
+
+        .dropdown-menu {
+            background-color: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+        }
+
+        .dropdown-item {
+            color: #cbd5e1 !important;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255,255,255,0.05) !important;
+            color: #ffffff !important;
+        }
+
+        /* =========================================================
+           🔥 KARTU INFOGRAFIS MINIMALIS (LOGO INFOGRAPHIC NUMBER) 
+           ========================================================= */
+        .premium-feature-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2.5rem 2rem 2rem 2rem;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Garis aksen vertikal di sisi kiri kartu */
+        .premium-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: transparent;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Pengganti Logo Tradisional: Nomor Urut Neon Minimalis Berkelas */
+        .feature-number-logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1rem;
+            font-variant-numeric: lining-nums;
+            letter-spacing: -1px;
+            background: linear-gradient(180deg, #cbd5e1 0%, rgba(203, 213, 225, 0.15) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.35s ease;
+        }
+
+        /* Hover State Efek */
+        .premium-feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 30px -10px rgba(15, 23, 42, 0.06), 0 10px 15px -5px rgba(15, 23, 42, 0.03);
+            border-color: rgba(15, 23, 42, 0.12);
+        }
+
+        /* Variasi warna garis neon & nomor saat di-hover */
+        .card-cyan:hover::before { background: var(--accent-cyan); }
+        .card-cyan:hover .feature-number-logo {
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, #00b4cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-blue:hover::before { background: var(--accent-blue); }
+        .card-blue:hover .feature-number-logo {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-purple:hover::before { background: #9333ea; }
+        .card-purple:hover .feature-number-logo {
+            background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.3px;
+        }
+
+        .feature-desc {
+            font-size: 0.92rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            background-color: #0f172a;
+            color: #64748b;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Sinkronisasi Sempurna Layar Mobile */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: rgba(15, 23, 42, 0.4);
+                padding: 1rem;
+                border-radius: 12px;
+                margin-top: 0.75rem;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .user-dropdown-toggle {
+                justify-content: center;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .dropdown-menu {
+                text-align: center;
+                margin-top: 0.5rem !important;
+            }
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+<body class="d-flex flex-column h-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-2">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">KOTA BALIGE</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navRes">
-                <span class="navbar-toggler-icon"></span>
+            <a class="brand-container" href="{% url 'home' %}">
+                <div class="logo-box">
+                    <i class="bi bi-building-fill-gear"></i>
+                </div>
+                <div class="brand-text-group">
+                    <span class="main-brand-title">BALIGE <span style="color: var(--accent-cyan);">SMARTCITY</span></span>
+                    <span class="sub-brand-slogan">
+                        <span class="radar-pulse"></span>ASPIRASI RAKYAT
+                    </span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navRes">
+                <span class="navbar-toggler-icon" style="width: 1.2em; height: 1.2em;"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navRes">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold" href="{% url 'dashboard:index' %}"><i class="bi bi-bar-chart-fill me-1"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'report_list' %}">Reports</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold" style="color: var(--accent-cyan) !important;" href="{% url 'dashboard:index' %}"><i class="bi bi-bar-chart-fill"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'report_list' %}"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="bi bi-info-circle"></i> About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="bi bi-envelope"></i> Contact</a></li>
                 </ul>
+                
                 <ul class="navbar-nav ms-auto align-items-center">
                     {% if user.is_authenticated %}
-                        <li class="nav-item me-2"><span class="badge {% if user.is_admin %}bg-danger{% else %}bg-success{% endif %}">{% if user.is_admin %}Admin{% else %}Citizen{% endif %}</span></li>
-                        <li class="nav-item">
-                            <form action="{% url 'logout' %}" method="post" class="form-loading">
-                                {% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-light btn-load">Logout</button>
-                            </form>
+                        <li class="nav-item dropdown w-100 text-end">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2 user-dropdown-toggle" href="#" id="userDrop" data-bs-toggle="dropdown">
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; border: 1px solid rgba(0,229,255,0.2); flex-shrink:0;">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <span class="fw-medium">{{ user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2 py-2">
+                                <li class="px-3 py-2 border-bottom border-secondary border-opacity-25 mb-1">
+                                    <div class="text-muted" style="font-size: 0.72rem;">ROLE AKSES:</div>
+                                    <span class="badge {% if user.is_admin %}bg-danger{% else %}bg-success{% endif %} mt-1 font-monospace">
+                                        {% if user.is_admin %}Administrator{% else %}Citizen (Warga){% endif %}
+                                    </span>
+                                </li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="form-loading d-block m-0 p-1">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item rounded text-danger d-flex align-items-center justify-content-center justify-content-lg-start gap-2 py-2 border-0" style="background: none;">
+                                            <i class="bi bi-box-arrow-right"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        <li class="nav-item w-100 text-end">
+                            <a class="btn btn-info btn-sm px-4 py-2 text-dark fw-bold rounded-3 shadow-sm w-100-mobile" href="{% url 'login' %}" style="background-color: var(--accent-cyan); border: none; font-size: 0.85rem;">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Login Portal
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -41,31 +325,57 @@
     <div class="container mt-3">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
-                    {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm border-0 d-flex align-items-center rounded-3" role="alert">
+                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <div>{{ message }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
         {% endif %}
     </div>
 
-    <div class="container mt-4">{% block content %}{% endblock %}</div>
+    <main class="flex-shrink-0 mb-5">
+        <div class="container mt-4">
+            {% block content %}
+            <div class="row g-4 mt-2">
+                <div class="col-12 col-md-4">
+                    <div class="premium-feature-card card-cyan">
+                        <div class="feature-number-logo">01</div>
+                        <h3 class="feature-title">Aspirasi Warga</h3>
+                        <p class="feature-desc">Laporkan jalan rusak, lampu mati, atau kendala fasilitas umum lainnya di seputaran Balige dengan praktis.</p>
+                    </div>
+                </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Global Loading Feedback Logic
-        document.querySelectorAll('.form-loading').forEach(f => {
-            f.addEventListener('submit', function() {
-                const b = this.querySelector('.btn-load') || this.querySelector('button[type="submit"]');
-                b.disabled = true;
-                b.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-            });
-        });
-        document.querySelectorAll('.btn-load-link').forEach(l => {
-            l.addEventListener('click', function() {
-                this.classList.add('disabled');
-                this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-            });
-        });
-    </script>
+                <div class="col-12 col-md-4">
+                    <div class="premium-feature-card card-blue">
+                        <div class="feature-number-logo">02</div>
+                        <h3 class="feature-title">Verifikasi Cepat</h3>
+                        <p class="feature-desc">Setiap data akan diverifikasi oleh Admin berpengalaman untuk memastikan laporan segera ditindaklanjuti.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="premium-feature-card card-purple">
+                        <div class="feature-number-logo">03</div>
+                        <h3 class="feature-title">Transparansi Balige</h3>
+                        <p class="feature-desc mb-3">Pantau status laporan secara real-time melalui Dashboard statistik yang dinamis.</p>
+                        <a href="{% url 'dashboard:index' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 0.82rem;">
+                            Buka Dashboard <i class="bi bi-arrow-right-short ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center text-md-between d-md-flex align-items-center justify-content-between">
+            <span class="small">&copy; 2026 Pemerintah Kota Balige. All rights reserved.</span>
+            <div><span class="badge bg-dark text-muted fw-normal font-monospace" style="font-size: 0.72rem;">PROD_ENV // BOOTSTRAP 5</span></div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
