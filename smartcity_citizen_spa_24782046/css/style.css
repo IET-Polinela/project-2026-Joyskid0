@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    background: linear-gradient(135deg, #f4f6f9 0%, #e2e8f0 100%);
+    font-family: 'Inter', sans-serif;
+}
+
+.spa-container {
+    min-height: calc(100vh - 80px);
+}
+
+.card, .sidebar-card, .main-card {
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+    background: #ffffff;
+}
+
+.main-card {
+    border-radius: 18px !important;
+}
+
+.progress, .progress-bar {
+    border-radius: 20px;
+}
+
+.form-control, .form-select {
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+}
+
+.user-badge {
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        padding-top: 1rem;
+        gap: 1rem;
+    }
+    
+    .user-badge {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #333 !important;
+        display: inline-block;
+    }
+}

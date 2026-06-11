@@ -26,7 +26,6 @@ jobs:
       - name: Upload artifact (Hanya Folder Frontend)
         uses: actions/upload-pages-artifact@v3
         with:
-          # Mengarah langsung ke folder frontend milikmu
           path: './smartcity_citizen_spa_24782046'
 
       - name: Deploy to GitHub Pages
