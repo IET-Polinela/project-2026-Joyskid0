@@ -1,39 +1,3 @@
-function setupLoginForm() {
-    const loginForm = document.getElementById('loginForm');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            const usernameInput = document.getElementById('loginUsername').value;
-            const passwordInput = document.getElementById('loginPassword').value;
-
-            const payload = {
-                username: usernameInput,
-                password: passwordInput
-            };
-
-            try {
-                const response = await requestAPI('/api/token/', 'POST', payload);
-
-                if (response.status === 200) {
-                    const data = await response.json();
-                    
-                    localStorage.setItem('access_token', data.access);
-                    localStorage.setItem('refresh_token', data.refresh);
-                    
-                    alert('Login Berhasil!');
-                    window.location.hash = '#dashboard';
-                } else {
-                    alert('Login Gagal! Periksa kembali username dan password Anda.');
-                }
-            } catch (error) {
-                alert('Tidak dapat terhubung ke server backend.');
-            }
-        });
-    }
-}
-
 function decodeToken(token) {
     try {
         const base64Url = token.split('.')[1];
@@ -52,8 +16,10 @@ function updateUserInfo() {
     if (token) {
         const payload = decodeToken(token);
         if (payload) {
-            document.getElementById('profileName').innerText = payload.username || 'Pengguna';
-            document.getElementById('profileRole').innerText = payload.role || 'Citizen';
+            const profileName = document.getElementById('profileName');
+            const profileRole = document.getElementById('profileRole');
+            if (profileName) profileName.innerText = payload.username || 'Pengguna';
+            if (profileRole) profileRole.innerText = payload.role || 'Citizen';
         }
     }
 }
@@ -61,11 +27,14 @@ function updateUserInfo() {
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    
+    const username = usernameInput ? usernameInput.value : '';
+    const password = passwordInput ? passwordInput.value : '';
 
     try {
-        const response = await fetch('http://103.151.63.86:8001/api/token/', {
+        const response = await fetch('https://103.151.63.86:8001/api/token/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,8 +50,11 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
             updateUserInfo();
 
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('dashboardSection').style.display = 'block';
+            const loginSec = document.getElementById('loginSection');
+            const dashSec = document.getElementById('dashboardSection');
+            
+            if (loginSec) loginSec.style.display = 'none';
+            if (dashSec) dashSec.style.display = 'block';
 
             if (typeof loadDashboardData === 'function') {
                 loadDashboardData();
@@ -96,14 +68,23 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     }
 });
 
-document.getElementById('btnLogout').addEventListener('click', function() {
-    localStorage.removeItem('accessToken');
-    alert('Anda telah keluar dari sistem.');
-    document.getElementById('dashboardSection').style.display = 'none';
-    document.getElementById('loginSection').style.display = 'block';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-});
+const btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', function() {
+        localStorage.removeItem('accessToken');
+        alert('Anda telah keluar dari sistem.');
+        
+        const loginSec = document.getElementById('loginSection');
+        const dashSec = document.getElementById('dashboardSection');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        if (dashSec) dashSec.style.display = 'none';
+        if (loginSec) loginSec.style.display = 'block';
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('accessToken')) {
