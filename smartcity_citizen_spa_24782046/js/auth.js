@@ -34,7 +34,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const password = passwordInput ? passwordInput.value : '';
 
     try {
-        const response = await fetch('https://103.151.63.86:8001/api/token/', {
+        const response = await fetch('http://103.151.63.86:8001/api/token/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
