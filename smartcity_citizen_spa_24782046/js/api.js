@@ -1,5 +1,5 @@
 async function requestAPI(endpoint, method = 'GET', payload = null) {
-    const baseUrl = 'http://103.151.63.86:8001'; 
+    const baseUrl = 'http://103.151.63.86:8001/'; 
     const token = localStorage.getItem('accessToken');
 
     console.log('Token yang dikirim:', token);
@@ -22,14 +22,14 @@ async function requestAPI(endpoint, method = 'GET', payload = null) {
     }
 
     try {
-        const response = await fetch(`${baseUrl}${endpoint}`, options);
+        const response = await fetch(`${baseUrl}${endpoint.replace(/^\//, '')}`, options);
 
         console.log(`Status Response (${endpoint}):`, response.status);
 
         if (response.status === 401) {
             alert('Session login habis. Silakan login ulang.');
             localStorage.removeItem('accessToken');
-            window.location.hash = '#login';
+            window.location.hash = 'login';
             if (typeof handleRouting === 'function') {
                 handleRouting();
             }
