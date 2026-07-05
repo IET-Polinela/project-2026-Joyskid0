@@ -15,5 +15,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', user_views.register, name='register'),
     path('api/search/', views.live_search_api, name='api_search'),
-    path('api/report/<int:pk>/', views.report_detail_api, name='api_report_detail'),
+    path('report/<int:pk>/', views.ReportDetailView.as_view(), name='report_detail'),
+    path('search/', views.report_search, name='report_search'),
 ]

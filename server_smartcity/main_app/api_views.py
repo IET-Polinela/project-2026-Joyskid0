@@ -20,7 +20,6 @@ class ReportViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
         if user.is_staff:
             return Report.objects.all().order_by('-updated_at')
 
@@ -36,7 +35,6 @@ class ReportViewSet(viewsets.ModelViewSet):
                 ~Q(status='DRAFT') |
                 Q(status='DRAFT', reporter=user)
             )
-
         return queryset
 
     def get_serializer_context(self):
