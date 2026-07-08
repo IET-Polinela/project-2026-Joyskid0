@@ -12,7 +12,7 @@ function decodeToken(token) {
 }
 
 function updateUserInfo() {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('access_token');
     if (token) {
         const payload = decodeToken(token);
         if (payload) {
@@ -26,38 +26,25 @@ function updateUserInfo() {
 
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('loginPassword');
 
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    
     const username = usernameInput ? usernameInput.value : '';
     const password = passwordInput ? passwordInput.value : '';
-
     try {
         const response = await fetch('http://103.151.63.86:8001/api/token/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
-
         const data = await response.json();
-
         if (response.status === 200) {
-            localStorage.setItem('accessToken', data.access);
-            alert('Login berhasil!');
-
+            localStorage.setItem('access_token', data.access);
+            localStorage.setItem('refresh_token', data.refresh || '');
             updateUserInfo();
-
-            const loginSec = document.getElementById('loginSection');
-            const dashSec = document.getElementById('dashboardSection');
-            
-            if (loginSec) loginSec.style.display = 'none';
-            if (dashSec) dashSec.style.display = 'block';
-
-            if (typeof loadDashboardData === 'function') {
-                loadDashboardData();
+            window.location.hash = '#dashboard';
+            if (typeof handleRouting === 'function') {
+                handleRouting();
             }
         } else {
             alert('Username atau password salah.');
@@ -71,34 +58,12 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 const btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.addEventListener('click', function() {
-        localStorage.removeItem('accessToken');
-        alert('Anda telah keluar dari sistem.');
-        
-        const loginSec = document.getElementById('loginSection');
-        const dashSec = document.getElementById('dashboardSection');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        
-        if (dashSec) dashSec.style.display = 'none';
-        if (loginSec) loginSec.style.display = 'block';
-        if (usernameInput) usernameInput.value = '';
-        if (passwordInput) passwordInput.value = '';
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('username');
+        window.location.hash = '#login';
+        if (typeof handleRouting === 'function') {
+            handleRouting();
+        }
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('accessToken')) {
-        updateUserInfo();
-        const loginSec = document.getElementById('loginSection');
-        const dashSec = document.getElementById('dashboardSection');
-        
-        if (loginSec && dashSec) {
-            loginSec.style.display = 'none';
-            dashSec.style.display = 'block';
-            
-            if (typeof loadDashboardData === 'function') {
-                loadDashboardData();
-            }
-        }
-    }
-});

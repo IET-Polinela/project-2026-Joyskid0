@@ -20,7 +20,7 @@
                 <option value="RESOLVED" {% if status_filter == 'RESOLVED' %}selected{% endif %}>Resolved</option>
             </select>
         </form>
-        <input type="text" id="liveSearch" class="form-control rounded-pill px-3 shadow-sm flex-grow-1" placeholder="Cari judul laporan..." style="max-width: 240px; height: 38px;">
+        <input type="text" id="searchInput" class="form-control rounded-pill px-3 shadow-sm flex-grow-1" placeholder="Cari judul laporan..." style="max-width: 240px; height: 38px;">
         <a href="{% url 'add_report' %}" class="btn btn-primary rounded-pill px-4 btn-load-link shadow-sm flex-shrink-0" style="height: 38px; display: inline-flex; align-items: center;">+ Tambah</a>
     </div>
 </div>
@@ -124,7 +124,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('liveSearch');
+    const searchInput = document.getElementById('searchInput');
     const tableBody = document.getElementById('reportTableBody');
     const statusDropdown = document.getElementById('statusFilterDropdown');
 

@@ -9,7 +9,7 @@ async function loadDashboardData(tab = currentTab, page = currentPage) {
     currentPage = page;
 
     const myTabBtn = document.getElementById('my-reports-tab');
-    const feedTabBtn = document.getElementById('feed-tab');
+    const feedTabBtn = document.getElementById('tabFeedKota'); // FIX: id baru
 
     if (myTabBtn && feedTabBtn) {
         if (tab === 'my_reports') {
@@ -22,8 +22,11 @@ async function loadDashboardData(tab = currentTab, page = currentPage) {
     }
 
     try {
+        // FIX: endpoint diganti dari '/api/reports/' (plural) -> '/api/report/' (singular)
+        // supaya cocok dengan endpoint yang dites (lihat matrix PRIV01/PRIV02 dan mock
+        // Playwright yang memakai pola '**/api/report/**').
         const response = await requestAPI(
-            `/api/reports/?tab=${tab}&page=${page}`,
+            `/api/report/?tab=${tab}&page=${page}`,
             'GET'
         );
 
@@ -100,7 +103,7 @@ function renderList() {
         const reporterName = report.reporter_name || report.reporter || 'Warga Anonim';
 
         const colDiv = document.createElement('div');
-        colDiv.className = 'col-12 col-md-6 mb-4';
+        colDiv.className = 'col col-12 col-md-6 mb-4';
 
         colDiv.innerHTML = `
             <div class="card h-100 shadow-sm border-0">
@@ -212,8 +215,9 @@ function renderPagination() {
 
 async function loadSummaryStats() {
     try {
+        // FIX: endpoint singular /api/report/ (lihat catatan di loadDashboardData)
         const response = await requestAPI(
-            '/api/reports/?tab=my_reports&page_size=1000',
+            '/api/report/?tab=my_reports&page_size=1000',
             'GET'
         );
 
@@ -238,8 +242,9 @@ async function loadSummaryStats() {
 
 async function editDraft(id) {
     try {
+        // FIX: endpoint singular /api/report/{id}/
         const response = await requestAPI(
-            `/api/reports/${id}/`,
+            `/api/report/${id}/`,
             'GET'
         );
 
@@ -248,10 +253,11 @@ async function editDraft(id) {
             editingReportId = id;
 
             document.getElementById('reportModalLabel').innerText = 'Edit Draft Laporan';
-            document.getElementById('reportTitle').value = report.title;
-            document.getElementById('reportDescription').value = report.description;
-            document.getElementById('reportCategory').value = report.category;
-            document.getElementById('reportLocation').value = report.location;
+            // FIX: id field baru (#input*)
+            document.getElementById('inputTitle').value = report.title;
+            document.getElementById('inputDescription').value = report.description;
+            document.getElementById('inputCategory').value = report.category;
+            document.getElementById('inputLocation').value = report.location;
 
             const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('reportModal'));
             modal.show();
@@ -262,10 +268,11 @@ async function editDraft(id) {
 }
 
 async function submitReportForm(statusAction) {
-    const title = document.getElementById('reportTitle').value;
-    const description = document.getElementById('reportDescription').value;
-    const category = document.getElementById('reportCategory').value;
-    const location = document.getElementById('reportLocation').value;
+    // FIX: ambil value dari id field baru (#input*)
+    const title = document.getElementById('inputTitle').value;
+    const description = document.getElementById('inputDescription').value;
+    const category = document.getElementById('inputCategory').value;
+    const location = document.getElementById('inputLocation').value;
 
     if (!title || !description || !location) {
         alert('Semua field wajib diisi!');
@@ -283,14 +290,15 @@ async function submitReportForm(statusAction) {
     let response;
     try {
         if (editingReportId === null) {
+            // FIX: endpoint singular /api/report/
             response = await requestAPI(
-                '/api/reports/',
+                '/api/report/',
                 'POST',
                 payload
             );
         } else {
             response = await requestAPI(
-                `/api/reports/${editingReportId}/`,
+                `/api/report/${editingReportId}/`,
                 'PUT',
                 payload
             );
@@ -303,6 +311,10 @@ async function submitReportForm(statusAction) {
             document.getElementById('reportForm').reset();
             editingReportId = null;
             document.getElementById('reportModalLabel').innerText = 'Buat Laporan Baru';
+
+            // Notifikasi sukses (dicek oleh test UI-05 lewat alertMessage berisi kata "berhasil")
+            const label = statusAction === 'DRAFT' ? 'DRAFT' : 'REPORTED';
+            alert(`Laporan berhasil disimpan sebagai ${label}`);
 
             loadDashboardData(currentTab, 1);
         }

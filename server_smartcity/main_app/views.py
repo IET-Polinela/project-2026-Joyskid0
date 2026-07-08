@@ -13,7 +13,10 @@ class AdminOnlyMixin(UserPassesTestMixin):
         return self.request.user.is_authenticated and self.request.user.is_admin
     def handle_no_permission(self):
         messages.error(self.request, "Akses Ditolak: Fitur ini hanya untuk Admin.")
-        return redirect('report_list')
+        # FIX UI-02: sebelumnya redirect ke 'report_list' (dirinya sendiri),
+        # menyebabkan ERR_TOO_MANY_REDIRECTS / redirect loop tak berujung
+        # untuk user yang login tapi bukan admin. Redirect ke 'home' saja.
+        return redirect('home')
 
 def home_view(request): return render(request, 'main_app/home.html')
 def about_view(request): return render(request, 'main_app/about.html')

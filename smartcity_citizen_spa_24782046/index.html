@@ -10,6 +10,44 @@
 </head>
 <body>
 
+<!-- =========================================================================
+     FIX UI-06: Navbar dipindah ke LUAR #dashboardSection.
+     Sebelumnya navbar ada di dalam #dashboardSection (display:none sebelum
+     login), sehingga test yang mengecek .navbar visible TANPA login gagal.
+     Sekarang navbar selalu di-render terlepas dari status login/dashboard.
+========================================================================= -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="bi bi-buildings-fill me-2"></i>Smart City Portal
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto align-items-lg-center gap-3">
+                <div class="user-badge text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    <div>
+                        <span id="profileName" class="fw-bold">---</span>
+                        <span class="mx-1">|</span>
+                        <span id="profileRole" class="text-warning text-capitalize" style="font-size: 0.8rem;">---</span>
+                    </div>
+                </div>
+                <button id="btnBukaModal" class="btn btn-light fw-bold btn-sm" data-bs-toggle="modal" data-bs-target="#reportModal">
+                    <i class="bi bi-plus-circle me-1"></i>Tambah Laporan
+                </button>
+
+                <button class="btn btn-danger fw-bold btn-sm" id="btnLogout">
+                    <i class="bi bi-box-arrow-right me-1"></i>Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="container mt-5" id="loginSection">
     <div class="row justify-content-center">
         <div class="col-12 col-sm-10 col-md-6 col-lg-4">
@@ -19,11 +57,11 @@
                     <form id="loginForm">
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" required autocomplete="off">
+                            <input type="text" class="form-control" id="loginUsername" required autocomplete="off">
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" required>
+                            <input type="password" class="form-control" id="loginPassword" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
                     </form>
@@ -34,37 +72,6 @@
 </div>
 
 <div id="dashboardSection" style="display:none;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="bi bi-buildings-fill me-2"></i>Smart City Portal
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto align-items-lg-center gap-3">
-                    <div class="user-badge text-white d-flex align-items-center gap-2">
-                        <i class="bi bi-person-circle fs-5"></i>
-                        <div>
-                            <span id="profileName" class="fw-bold">---</span>
-                            <span class="mx-1">|</span>
-                            <span id="profileRole" class="text-warning text-capitalize" style="font-size: 0.8rem;">---</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-light fw-bold btn-sm" data-bs-toggle="modal" data-bs-target="#reportModal">
-                        <i class="bi bi-plus-circle me-1"></i>Tambah Laporan
-                    </button>
-                    <button class="btn btn-danger fw-bold btn-sm" id="btnLogout">
-                        <i class="bi bi-box-arrow-right me-1"></i>Keluar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <main class="container px-4 mt-4 spa-container">
         <div class="row g-4">
             <div class="col-12 col-lg-3">
@@ -72,19 +79,30 @@
                     <h5 class="fw-bold mb-4">
                         <i class="bi bi-bar-chart-fill me-2"></i>Rekap Status
                     </h5>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <span>Draft</span><strong id="statDraft">0</strong>
+
+                    <!-- =============================================================
+                         FIX UI-05: Dibungkus dengan #summaryStats, dan tiap angka
+                         memakai class .badge (test mencari .badge.bg-secondary
+                         untuk membaca counter Draft).
+                    ============================================================= -->
+                    <div id="summaryStats">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Draft</span>
+                                <span class="badge bg-secondary" id="statDraft">0</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <span>Diproses</span><strong id="statDiproses">0</strong>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Diproses</span>
+                                <span class="badge bg-info" id="statDiproses">0</span>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="d-flex justify-content-between">
-                            <span>Selesai</span><strong id="statSelesai">0</strong>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Selesai</span>
+                                <span class="badge bg-success" id="statSelesai">0</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +112,8 @@
                 <div class="card main-card p-4">
                     <div class="d-flex gap-2 mb-4">
                         <button class="btn btn-primary active" id="my-reports-tab" onclick="loadDashboardData('my_reports',1)">Laporan Saya</button>
-                        <button class="btn btn-outline-primary" id="feed-tab" onclick="loadDashboardData('feed',1)">Feed Kota</button>
+                        <!-- FIX UI-03: id diganti dari 'feed-tab' menjadi 'tabFeedKota' -->
+                        <button class="btn btn-outline-primary" id="tabFeedKota" onclick="loadDashboardData('feed',1)">Feed Kota</button>
                     </div>
                     <div class="row" id="listContainer"></div>
                     <div class="mt-4" id="paginationContainer"></div>
@@ -112,18 +131,23 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
+                <!-- =====================================================
+                     FIX UI-04/UI-05: id field diganti prefix 'report' -> 'input'
+                     agar sesuai dengan yang dicari test (#inputTitle,
+                     #inputCategory, #inputLocation, #inputDescription).
+                ===================================================== -->
                 <form id="reportForm">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Judul Laporan</label>
-                        <input type="text" class="form-control" id="reportTitle" required>
+                        <input type="text" class="form-control" id="inputTitle" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Deskripsi</label>
-                        <textarea class="form-control" rows="4" id="reportDescription" required></textarea>
+                        <textarea class="form-control" rows="4" id="inputDescription" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Kategori</label>
-                        <select class="form-select" id="reportCategory">
+                        <select class="form-select" id="inputCategory">
                             <option value="Fasilitas Publik">Fasilitas Publik</option>
                             <option value="Keamanan">Keamanan</option>
                             <option value="Kebersihan">Kebersihan</option>
@@ -132,7 +156,7 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-bold">Lokasi</label>
-                        <input type="text" class="form-control" id="reportLocation" required>
+                        <input type="text" class="form-control" id="inputLocation" required>
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-secondary fw-bold" id="btnDraft">Simpan Draft</button>
